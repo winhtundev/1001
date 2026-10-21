@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>မြန်မာစာ စာမေးပွဲ အမြန်ပြန်လှန်လေ့လာရေး</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Padauk & Noto Sans Myanmar -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;600;700&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        burmese: ['"Noto Sans Myanmar"', '"Padauk"', '"Pyidaungsu"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Noto Sans Myanmar', 'Padauk', 'Pyidaungsu', sans-serif;
+            background-color: #fdfbf7; /* Warm paper study background */
+            color: #1e293b;
+            line-height: 1.85;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .myanmar-text {
+            line-height: 2.0;
+        }
+        /* Hide elements in Key Points Only Mode */
+        body.key-only-mode .full-detail {
+            display: none !important;
+        }
+        body.key-only-mode .key-highlight-box {
+            border-width: 2px;
+            border-color: #f59e0b;
+            background-color: #fffbeb;
+        }
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-16 selection:bg-amber-200 selection:text-amber-900">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 text-white px-4 py-2.5 rounded-full shadow-lg flex items-center gap-2 text-xs font-medium">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span id="toast-msg">စာသားကို ကူးယူပြီးပါပြီ!</span>
+    </div>
+
+    <!-- Sticky Top Header & Navigation Tabs -->
+    <header class="sticky top-0 z-40 bg-[#fdfbf7]/95 backdrop-blur-md border-b border-amber-200/80 shadow-sm">
+        <div class="max-w-xl mx-auto px-3.5 pt-3 pb-2">
+            <!-- Top Row: Title & Key Points Toggle Button -->
+            <div class="flex items-center justify-between gap-2 mb-2.5">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-amber-600 text-white flex items-center justify-center font-bold text-base shadow-sm">
+                        မ
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-sm sm:text-base text-slate-800 leading-tight">မြန်မာစာ အမြန်ပြန်လှန်လေ့လာရေး</h1>
+                        <p class="text-[11px] text-slate-500 leading-tight">မနက်ဖြန် စာမေးပွဲအတွက် အမှတ်ပြည့် လမ်းညွှန်</p>
+                    </div>
+                </div>
+
+                <!-- Key Points Only Toggle Button -->
+                <button id="keyModeBtn" onclick="toggleKeyMode()" class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100 active:scale-95 transition-all shadow-sm">
+                    <span id="keyModeDot" class="w-2 h-2 rounded-full bg-slate-400 transition-colors"></span>
+                    <span>အဓိကအချက် သီးသန့်</span>
+                </button>
+            </div>
+
+            <!-- 6 Navigation Tabs (Original 5 + 1 New Tab for Office/Business Letters) -->
+            <div class="grid grid-cols-6 gap-1 bg-amber-100/70 p-1 rounded-xl border border-amber-200/60">
+                <button onclick="switchTab('tab-sorting')" id="btn-tab-sorting" class="tab-btn py-1.5 px-0.5 rounded-lg text-[11px] sm:text-xs font-bold transition-all bg-white text-amber-800 shadow-sm">
+                    အက္ခရာစဉ်
+                </button>
+                <button onclick="switchTab('tab-grammar')" id="btn-tab-grammar" class="tab-btn py-1.5 px-0.5 rounded-lg text-[11px] sm:text-xs font-medium text-slate-600 hover:text-slate-900 transition-all">
+                    သဒ္ဒါ
+                </button>
+                <button onclick="switchTab('tab-prose')" id="btn-tab-prose" class="tab-btn py-1.5 px-0.5 rounded-lg text-[11px] sm:text-xs font-medium text-slate-600 hover:text-slate-900 transition-all">
+                    စကားပြေ
+                </button>
+                <button onclick="switchTab('tab-poetry')" id="btn-tab-poetry" class="tab-btn py-1.5 px-0.5 rounded-lg text-[11px] sm:text-xs font-medium text-slate-600 hover:text-slate-900 transition-all">
+                    ကဗျာ
+                </button>
+                <button onclick="switchTab('tab-office')" id="btn-tab-office" class="tab-btn py-1.5 px-0.5 rounded-lg text-[11px] sm:text-xs font-medium text-slate-600 hover:text-slate-900 transition-all">
+                    ရုံးသုံးစာ
+                </button>
+                <button onclick="switchTab('tab-essay')" id="btn-tab-essay" class="tab-btn py-1.5 px-0.5 rounded-lg text-[11px] sm:text-xs font-medium text-slate-600 hover:text-slate-900 transition-all">
+                    စာစီစာကုံး
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container (Mobile-First max-w-xl) -->
+    <main class="max-w-xl mx-auto px-3.5 pt-4 space-y-4">
+
+        <!-- Mode Indicator Banner (Visible only when Key Points Only mode is ON) -->
+        <div id="keyModeBanner" class="hidden bg-amber-500 text-white px-3.5 py-2 rounded-xl text-xs font-medium flex items-center justify-between shadow-sm">
+            <span>⚡ <strong>အဓိကအချက် သီးသန့်မုဒ်</strong> ပွင့်နေပါသည် (စာပိုဒ်ရှည်များ ဖျောက်ထားသည်)</span>
+            <button onclick="toggleKeyMode()" class="underline font-bold ml-2 shrink-0">စာအပြည့်ပြန်ကြည့်ရန်</button>
+        </div>
+
+        <!-- =========================================================
+             TAB 1: အက္ခရာစဉ် (ALPHABETICAL SORTING - 6 MARKS)
+             ========================================================= -->
+        <div id="tab-sorting" class="tab-content space-y-4">
+            
+            <!-- Exam Shortcut Card -->
+            <div class="bg-white rounded-2xl p-4 border border-amber-200/80 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">၁၂ လုံးစီ (၆ မှတ်)</span>
+                    <span class="text-xs text-slate-500 font-medium">အမှတ်ပြည့်ယူနည်း</span>
+                </div>
+                <h2 class="font-bold text-base text-slate-800">🎯 စာမေးပွဲခန်းထဲ အမြန်ဆုံး စီနည်း (၂) ဆင့်</h2>
+
+                <!-- Step 1 -->
+                <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-3.5 space-y-2">
+                    <div class="font-bold text-sm text-amber-900">အဆင့် (၁) - ပင်မဗျည်း မတူရင် (က မှ အ အတိုင်းစီ)</div>
+                    <p class="text-xs text-slate-700 full-detail">
+                        ရှေ့ဆုံးစာလုံး (ပင်မဗျည်း) တွေ မတူရင် အသတ်တွေ၊ ဗျည်းတွဲတွေ ဘာမှကြည့်စရာမလိုဘူး။ ဗျည်း (၃၃) လုံး အစဉ်အတိုင်းသာ တန်းစီချလိုက်ပါ—
+                    </p>
+                    <!-- 33 Consonants Grid -->
+                    <div class="grid grid-cols-1 gap-1.5 text-xs bg-white p-2.5 rounded-lg border border-amber-200/80 font-medium text-slate-800">
+                        <div class="flex justify-between border-b border-slate-100 pb-1"><span>၁။ က ၊ ခ ၊ ဂ ၊ ဃ ၊ င</span><span class="text-slate-400 text-[10px]">(က-ဝဂ်)</span></div>
+                        <div class="flex justify-between border-b border-slate-100 pb-1"><span>၂။ စ ၊ ဆ ၊ ဇ ၊ ဈ ၊ ည (ဉ)</span><span class="text-slate-400 text-[10px]">(စ-ဝဂ်)</span></div>
+                        <div class="flex justify-between border-b border-slate-100 pb-1 text-slate-500"><span>၃။ ဋ ၊ ဌ ၊ ဍ ၊ ဎ ၊ ဏ</span><span class="text-[10px]">(ဋ-ဝဂ်)</span></div>
+                        <div class="flex justify-between border-b border-slate-100 pb-1"><span>၄။ တ ၊ ထ ၊ ဒ ၊ ဓ ၊ န</span><span class="text-slate-400 text-[10px]">(တ-ဝဂ်)</span></div>
+                        <div class="flex justify-between border-b border-slate-100 pb-1"><span>၅။ ပ ၊ ဖ ၊ ဗ ၊ ဘ ၊ မ</span><span class="text-slate-400 text-[10px]">(ပ-ဝဂ်)</span></div>
+                        <div class="flex justify-between border-b border-slate-100 pb-1"><span>၆။ ယ ၊ ရ ၊ လ ၊ ဝ ၊ သ</span><span class="text-slate-400 text-[10px]">(အ-ဝဂ်)</span></div>
+                        <div class="flex justify-between"><span>၇။ ဟ ၊ ဠ ၊ အ <span class="text-amber-700">(ဩ/ဪ ပါဝင်)</span></span><span class="text-slate-400 text-[10px]">(အနောက်ဆုံး)</span></div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3.5 space-y-2.5">
+                    <div class="font-bold text-sm text-emerald-900">အဆင့် (၂) - ပင်မဗျည်း တူနေရင် ကော်လံ (၃) ခု ခွဲပါ</div>
+                    <p class="text-xs text-slate-700 full-detail">
+                        ပထမဗျည်းချင်း တူနေတဲ့ စကားလုံးတွေကို ဒီအုပ်စု (၃) စု ခွဲပြီး အစဉ်လိုက် စီရပါမယ်—
+                    </p>
+
+                    <div class="space-y-2 text-xs">
+                        <div class="bg-white p-2.5 rounded-lg border border-emerald-200">
+                            <span class="font-bold text-emerald-800 block">၁။ ရိုးရိုးဗျည်း + သရသက်သက် (အရှေ့ဆုံးမှာထား)</span>
+                            <span class="text-slate-600 block mt-0.5">အ ➔ အာ ➔ အိ ➔ အီ ➔ အု ➔ အူ ➔ အေ ➔ အဲ ➔ အော (ေ-ာ်) ➔ အို</span>
+                            <span class="text-[11px] text-amber-700 font-medium block mt-0.5">⚠️ သတိပြုရန်: "ကော် (ေ-ာ်)" သည် အသတ်မဟုတ်ပါ၊ "အော" သရသက်သက်ဖြစ်သည်။ အသံတို/မြစ် (-့) ➔ သံရှည် ➔ ဝစ္စပေါက် (-း) အတိုင်းစီပါ။</span>
+                        </div>
+
+                        <div class="bg-white p-2.5 rounded-lg border border-emerald-200">
+                            <span class="font-bold text-blue-800 block">၂။ ရိုးရိုးဗျည်း + အသတ်ပါတာတွေ (အလယ်မှာထား)</span>
+                            <span class="text-slate-700 font-semibold block mt-0.5">က် ➔ င် ➔ စ် ➔ ဉ်/ည် ➔ တ် ➔ န် ➔ ပ် ➔ မ် ➔ ယ် ➔ ံ (သေးသေးတင်)</span>
+                        </div>
+
+                        <div class="bg-white p-2.5 rounded-lg border border-emerald-200">
+                            <span class="font-bold text-purple-800 block">၃။ ဗျည်းတွဲ (ပင့်၊ ရစ်၊ ဆွဲ၊ ထိုး) ပါတာတွေ (အနောက်ဆုံးပို့)</span>
+                            <span class="text-slate-700 font-semibold block mt-0.5">ယပင့် (-ျ) ➔ ရရစ် (ြ-) ➔ ဝဆွဲ (-ွ) ➔ ဟထိုး (-ှ)</span>
+                            <span class="text-[11px] text-purple-700 block mt-0.5">💡 နှစ်ခုတွဲ (ဥပမာ ရစ်+ဆွဲ ြ-ွ "ကြွက်") သည် တစ်ခုတွဲများ အကုန်ပြီးမှ အနောက်ဆုံးတွင် လာသည်။</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual 3-Column Table Example (12 Words of 'က') -->
+            <div class="bg-white rounded-2xl p-4 border border-amber-200/80 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-bold text-sm text-slate-800">📋 လက်တွေ့ ဇယားခွဲပုံ နမူနာ ('က' ၁၂ လုံး)</h3>
+                    <span class="text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-semibold">၁၀၀% အမှန်</span>
+                </div>
+
+                <!-- 3-Column Table for Mobile -->
+                <div class="grid grid-cols-3 gap-1.5 text-xs">
+                    <!-- Col 1 -->
+                    <div class="bg-amber-50/60 border border-amber-200 rounded-xl p-2">
+                        <div class="font-bold text-amber-900 text-center border-b border-amber-200 pb-1 mb-1.5 text-[11px]">၁။ သရသက်သက်</div>
+                        <ol class="space-y-1 text-slate-800 font-medium text-[11px]">
+                            <li>၁။ ကားလမ်း <span class="text-slate-400">(အာ)</span></li>
+                            <li>၂။ ကုသိုလ် <span class="text-slate-400">(အု)</span></li>
+                            <li>၃။ ကူညီ <span class="text-slate-400">(အူ)</span></li>
+                        </ol>
+                    </div>
+                    <!-- Col 2 -->
+                    <div class="bg-blue-50/60 border border-blue-200 rounded-xl p-2">
+                        <div class="font-bold text-blue-900 text-center border-b border-blue-200 pb-1 mb-1.5 text-[11px]">၂။ အသတ်</div>
+                        <ol class="space-y-1 text-slate-800 font-medium text-[11px]">
+                            <li>၄။ ကောက်ပဲ <span class="text-blue-600">(က်)</span></li>
+                            <li>၅။ ကောင်းကင် <span class="text-blue-600">(င်)</span></li>
+                            <li>၆။ ကိစ္စ <span class="text-blue-600">(စ်)</span></li>
+                            <li>၇။ ကန်တော့ <span class="text-blue-600">(န်)</span></li>
+                            <li>၈။ ကံ့ကော် <span class="text-blue-600">(ံ)</span></li>
+                        </ol>
+                    </div>
+                    <!-- Col 3 -->
+                    <div class="bg-purple-50/60 border border-purple-200 rounded-xl p-2">
+                        <div class="font-bold text-purple-900 text-center border-b border-purple-200 pb-1 mb-1.5 text-[11px]">၃။ ဗျည်းတွဲ</div>
+                        <ol class="space-y-1 text-slate-800 font-medium text-[11px]">
+                            <li>၉။ ကျောင်းသား <span class="text-purple-600">(-ျ)</span></li>
+                            <li>၁၀။ ကြက်သွန် <span class="text-purple-600">(ြ-)</span></li>
+                            <li>၁၁။ ကွမ်းယာ <span class="text-purple-600">(-ွ)</span></li>
+                            <li>၁၂။ ကြွက်သား <span class="text-purple-600">(ြ-ွ)</span></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Interactive Practice Selector -->
+                <div class="pt-2 border-t border-slate-100 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-700">နောက်ထပ် နမူနာပုဒ်များ ကြည့်ရန် -</span>
+                        <select onchange="renderSortExample(this.value)" class="text-xs bg-amber-50 border border-amber-300 text-amber-900 font-semibold rounded-lg px-2.5 py-1 outline-none">
+                            <option value="flowers">ပန်း (၁၅) မျိုး (ဗျည်းမတူ)</option>
+                            <option value="fruits">အသီး (၁၂) မျိုး (ရောနှော)</option>
+                            <option value="pa5">'ပ' စာလုံး (၅) လုံး</option>
+                        </select>
+                    </div>
+                    <div id="sort-example-output" class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs text-slate-700">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================================================
+             TAB 2: သဒ္ဒါ နှင့် အသုံးအနှုန်း (GRAMMAR, PRONUNCIATION & USAGE)
+             ========================================================= -->
+        <div id="tab-grammar" class="tab-content hidden space-y-4">
+
+            <!-- Quick Sub-navigation pills for Tab 2 -->
+            <div class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
+                <a href="#gram-part-a" class="shrink-0 px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-900 border border-amber-300">၁။ ဗျည်းသံနှင့် ပုဒ် (၄) မျိုး</a>
+                <a href="#gram-part-b" class="shrink-0 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-900 border border-emerald-300">၂။ အသံထွက်နှင့် စာလုံးပေါင်း</a>
+                <a href="#gram-part-c" class="shrink-0 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-900 border border-blue-300">၃။ သဒ္ဒါအသုံးအနှုန်း</a>
+                <a href="#gram-part-d" class="shrink-0 px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-900 border border-purple-300">၄။ ဆယ်ပြည့်ကိန်းများ</a>
+            </div>
+
+            <!-- PART A: ဗျည်းသံပြောင်းလဲမှု နှင့် ပုဒ် (၄) မျိုး -->
+            <div id="gram-part-a" class="bg-white rounded-2xl p-4 border border-amber-200/80 shadow-sm space-y-3">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">အပိုင်း (က) - စကားသံနှင့် ပုဒ်များ</span>
+                
+                <!-- Question 10 & 11: Sound Changes -->
+                <div class="space-y-2">
+                    <h3 class="font-bold text-sm text-slate-800">၁။ စကားသံနှင့် ဗျည်းသံပြောင်းလဲမှု (၅) ချက်</h3>
+                    <p class="text-xs text-slate-600 full-detail">
+                        မြန်မာစကားပြောဆိုရာ၌လည်းကောင်း၊ စာရွတ်ဖတ်ရာ၌လည်းကောင်း ဗျည်းသံပြောင်းလဲမှုများ ရှိတတ်သည်ကို <strong>စကားသံပြောင်းလဲမှု</strong>ဟု ခေါ်သည်။
+                    </p>
+                    <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-3 space-y-2 text-xs">
+                        <div class="font-bold text-amber-900">ဗျည်းသံပြောင်းလဲမှုဟူသည် အဘယ်နည်း (အချက် ၅ ချက်) -</div>
+                        <ul class="space-y-1.5 text-slate-800">
+                            <li><strong>(၁) သံညင်းဗျည်း (အဃောသ) အချို့ကို သံပြင်းဗျည်း (ဃောသ) သို့ ပြောင်းလဲရွတ်ဆိုခြင်း</strong> <span class="text-amber-800 font-semibold">(ဥပမာ - ခေါင်း ➔ ဂေါင်း ၊ စာပေ ➔ စာဗေ)</span></li>
+                            <li><strong>(၂) ဟထိုးသံဖြင့် ရွတ်ဆိုခြင်း</strong> <span class="text-emerald-700 font-semibold">(ဥပမာ - မိတ်ကပ် ➔ မှိတ်ကပ်)</span></li>
+                            <li><strong>(၃) ဟထိုးသံချန် ရွတ်ခြင်း</strong> <span class="text-emerald-700 font-semibold">(ဥပမာ - မှူးမတ် ➔ မူးမတ်)</span></li>
+                            <li><strong>(၄) ပင့်ရစ်သံ ဖြည့်ရွတ်ခြင်း</strong> <span class="text-blue-700 font-semibold">(ဥပမာ - ပစ်ခတ် ➔ ပျစ်ခတ်)</span></li>
+                            <li><strong>(၅) ပင့်ရစ်သံ ချန်ရွတ်ခြင်း</strong> <span class="text-blue-700 font-semibold">(ဥပမာ - ပျဉ်းမနား ➔ ပဉ်းမနား)</span> တို့ဖြစ်သည်။</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Question 12 to 15: ပုဒ် ၄ မျိုး -->
+                <div class="space-y-2 pt-2 border-t border-slate-100">
+                    <h3 class="font-bold text-sm text-slate-800">၂။ ပုဒ် (၄) မျိုး အဓိပ္ပာယ်များ (အလွတ်ကျက်ရန်)</h3>
+                    <div class="grid grid-cols-2 gap-1.5 text-xs font-bold text-slate-700 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                        <div>(၁) ပုဒ်ရိုး</div>
+                        <div>(၂) ပေါင်းစပ်ပုဒ်</div>
+                        <div>(၃) ပစ္စည်းရောပုဒ်</div>
+                        <div>(၄) ဝိဘတ်သွယ်ပုဒ်</div>
+                    </div>
+
+                    <div class="space-y-2 text-xs">
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                            <strong class="text-slate-900 block mb-0.5">• ပုဒ်ရိုးဟူသည် -</strong>
+                            ဝိဘတ်၊ ပစ္စည်းတစ်ခုခု <strong>မရောဘဲ</strong> အနက်အဓိပ္ပာယ်တစ်ခုကို ဖော်ဆောင်နိုင်၍ သီးခြားရပ်တည်နိုင်သော စကားလုံးကို ပုဒ်ရိုးဟုခေါ်သည်။<br>
+                            <span class="text-amber-800 font-medium">သာဓက - လူ၊ အိမ်၊ သူ၊ စား၊ အေး၊ ကစား၊ သနား၊ ကဲ့ရဲ့၊ ပင်ပန်း၊ ကောင်းကင်၊ ခမ်းနား၊ ပုတီး။</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                            <strong class="text-slate-900 block mb-0.5">• ပေါင်းစပ်ပုဒ်ဟူသည် -</strong>
+                            ဝိဘတ်၊ ပစ္စည်း၊ သမ္ဗန္ဓတစ်ခုခုကို ကြား၌ မခံဘဲ သီးခြားစကားလုံး (၂) လုံး၊ (၃) လုံး စသည်တို့ကို ပေါင်းစပ်ဖွဲ့စည်းထားသည့် ပုဒ်ကို ပေါင်းစပ်ပုဒ်ဟုခေါ်သည်။
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                            <strong class="text-slate-900 block mb-0.5">• ဝိဘတ်သွယ်ပုဒ်ဟူသည် -</strong>
+                            ဝိဘတ်တစ်ခုခုနှင့် ဆက်သွယ်ထားသောပုဒ်ကို ဝိဘတ်သွယ်ပုဒ်ဟုခေါ်သည်။ နာမ်ပုဒ်၊ နာမ်စားပုဒ်၊ ကြိယာပုဒ် တစ်ခုခု၏ <strong>နောက်၌</strong> ဝိဘတ်ကို ထားရသည်။
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PART B: အသံထွက်မှန်မှ စာလုံးပေါင်းမှန်မည် (Page 97-99) -->
+            <div id="gram-part-b" class="bg-white rounded-2xl p-4 border border-emerald-200/80 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">အပိုင်း (ခ) - အသံထွက်နှင့် စာလုံးပေါင်း</span>
+                    <span class="text-[11px] text-slate-500">စာမျက်နှာ ၉၇ - ၉၉</span>
+                </div>
+                <h2 class="font-bold text-base text-slate-800">🗣️ အသံထွက်မှန်မှ စာလုံးပေါင်းမှန်မည်</h2>
+                <p class="text-xs text-slate-600 full-detail">
+                    မြန်မာစာ မြန်မာစကားစာအုပ်တွင် အသံထွက်ပုံထွက်နည်း မှားယွင်းရာမှ စာလုံးပေါင်းမှားယွင်းတတ်ပုံများကို အမှန်သုံးစွဲတတ်စေရန် တင်ပြထားသည်—
+                </p>
+
+                <div class="space-y-2.5 text-xs">
+                    <!-- 1. ကယဉ်းကြောင့် -->
+                    <div class="p-3 rounded-xl bg-emerald-50/60 border border-emerald-200 space-y-1">
+                        <div class="font-bold text-emerald-900 text-sm">၁။ ကယဉ်းကြောင့် နှင့် တကယ်တည်း</div>
+                        <p class="text-slate-700">
+                            • "ကယဉ်းကြောင့်" တွင် <strong>"ကညဉ်း၊ ကသည်း၊ ကြောင့်"</strong> ဟူသော တစ်ချောင်းချင်း တူရိယာအသံထားသည့် ထိုစကားသုံးလုံးကို (ကသယ်ကောင်) ဖြင့် ဖတ်ရသည်။ "ကသဲ" ဟု ဖတ်ပါက မှားသည်။<br>
+                            • ပါးစပ်တွင် <strong>"ကသည်းကောင်"</strong> ဟု အသံထွက်သော်လည်း စာရေးရာ၌ <strong class="text-emerald-800 underline">"ကယဉ်းကြောင့်"</strong> ဟု ရေးမှ မှန်သည်။<br>
+                            • ထို့အတူ <strong>"တကတည်း" (တဂဒဲ)</strong> ဟု အသံထွက်သော်လည်း စာရေးရာ၌ <strong class="text-emerald-800 underline">"တကယ်တည်း"</strong> ဟု ရေးမှ မှန်သည်။
+                        </p>
+                    </div>
+
+                    <!-- 2. ဝှက်နှင့် ဝှမ်း -->
+                    <div class="p-3 rounded-xl bg-emerald-50/60 border border-emerald-200 space-y-1">
+                        <div class="font-bold text-emerald-900 text-sm">၂။ ဝှက် နှင့် ဝှမ်း အသုံး</div>
+                        <p class="text-slate-700">
+                            • ဖုံးကွယ်သည့်အနက်တွင် <strong>"ဝှက်"</strong> သုံးသည် (ဥပမာ - <em>အက္ခရာဝှက်၊ စကားဝှက်</em>)။<br>
+                            • ပြည့်လျှံသည့်အနက်၊ ရွှေသင်္ကန်းကပ်လှူသည့်အနက်တွင် <strong>"ဝှမ်း"</strong> သုံးသည် (ဥပမာ - <em>ရွှေတိဂုံစေတီတော်ကြီးကို ရွှေသင်္ကန်းကပ်လှူရာ၌ <strong>"ရွှေဝှမ်းသည်"</strong> ဟု သုံးသည်</em>)။
+                        </p>
+                    </div>
+
+                    <!-- 3. ကယ်နှင့် ကျယ် -->
+                    <div class="p-3 rounded-xl bg-emerald-50/60 border border-emerald-200 space-y-1">
+                        <div class="font-bold text-emerald-900 text-sm">၃။ ကယ် နှင့် ကျယ် အသုံး</div>
+                        <p class="text-slate-700">
+                            • အကျယ်အဝန်း (ဂုဏ်ရည်ပြပုဒ်) ဖြစ်လျှင် <strong>"ကျယ်"</strong> သုံးသည် (ဥပမာ - <em>လယ်ကွင်းကျယ်၊ အကျယ်ချဲ့၊ ကျယ်ဝန်းသည်</em>)။<br>
+                            • ကယ်ဆယ်သည့်အနက်နှင့် အာမေဍိတ်စကားတို့တွင် <strong>"ကယ်"</strong> သုံးသည် (ဥပမာ - <em>ကယ်တင်သည်၊ အိုကယ်</em>)။
+                        </p>
+                    </div>
+
+                    <!-- 4. ဘက်နှင့် ဖက် -->
+                    <div class="p-3 rounded-xl bg-amber-50 border border-amber-300 space-y-1 key-highlight-box">
+                        <div class="font-bold text-amber-900 text-sm">၄။ ဘက် နှင့် ဖက် အသုံး (အရေးကြီး ⭐)</div>
+                        <p class="text-slate-800">
+                            • <strong>"ဘက်စုံ၊ ဘက်ပေါင်းစုံ၊ ဘက်လိုက်"</strong> စသည်ဖြင့် အစစကားလုံး (အာဒိစကားလုံး) ဖြစ်လျှင် <strong>"ဘက်"</strong> ကို သုံးရသည်။<br>
+                            • အဖော်အဖက်မှန်သမျှ <strong>"ဖက်"</strong> ကို သုံးသော်လည်း၊ <strong class="text-rose-700 underline">"ရဲဘော်ရဲဘက်"</strong> ကိုမူ <strong>"ဘက်"</strong> နှင့် ရေးရသည်။
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PART C: သဒ္ဒါအသုံးအနှုန်း (Page 99-100) -->
+            <div id="gram-part-c" class="bg-white rounded-2xl p-4 border border-blue-200/80 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">အပိုင်း (ဂ) - သဒ္ဒါအသုံးအနှုန်း</span>
+                    <span class="text-[11px] text-slate-500">စာမျက်နှာ ၉၉ - ၁၀၀</span>
+                </div>
+                <h2 class="font-bold text-base text-slate-800">✍️ သဒ္ဒါအသုံးအနှုန်း အမှားအမှန်များ</h2>
+
+                <div class="space-y-3 text-xs">
+                    <!-- 1. သည် နှင့် မှာ -->
+                    <div class="p-3.5 rounded-xl bg-blue-50/50 border border-blue-200 space-y-1.5">
+                        <div class="font-bold text-blue-900 text-sm">၁။ "သည်" နှင့် "မှာ" အသုံး</div>
+                        <p class="text-slate-700">
+                            "သည်" နှင့် "မှာ" သည် ပြုသူ၊ ဖြစ်သူ၊ ရှိသူ (ကတ္တား) ဖြစ်ကြောင်းကို ဖော်ပြသည်။ ဝါကျတစ်ခုတွင် တစ်ပြိုင်နက်တည်းသုံးသောအခါ <strong>ရှေ့ကတ္တားနောက်တွင် "သည်" ကို ရှေးဦးစွာသုံး၍၊ နောက်ကတ္တားနောက်တွင်မှ "မှာ" ကို သုံးရသည်</strong> ("သည်" က သာမန်ဖော်ပြ၍ "မှာ" က ရှေ့နှင့်နောက် ခွဲခြားဖော်ပြသည်)။
+                        </p>
+                        <div class="bg-white p-2.5 rounded-lg border border-blue-200 space-y-1">
+                            <div class="text-emerald-700 font-medium">✔️ <strong>အမှန် -</strong> "မယ်ခကိုင်ထားသော သံတစ်ပိဿာထုပ်<strong>သည်</strong>သေး၍ မောင်လှထမ်းထားသော လဲတစ်ပိဿာထုပ်<strong>မှာ</strong>ကြီးသည်"</div>
+                            <div class="text-rose-600">❌ <strong>အမှား -</strong> "...သံတစ်ပိဿာထုပ်<strong>မှာ</strong>သေး၍ ...လဲတစ်ပိဿာထုပ်<strong>သည်</strong>ကြီးသည်" (ဟု မသုံးသင့်ပါ)</div>
+                        </div>
+                    </div>
+
+                    <!-- 2. ကို နှင့် အား -->
+                    <div class="p-3.5 rounded-xl bg-blue-50/50 border border-blue-200 space-y-1.5">
+                        <div class="font-bold text-blue-900 text-sm">၂။ "ကို" နှင့် "အား" အသုံး</div>
+                        <ul class="space-y-1 text-slate-700">
+                            <li>• <strong>အပြုခံရသူ (ကံ)</strong> ကိုဖော်ပြလိုလျှင် <strong>"ကို"</strong> သုံးသည် (ဥပမာ - <em>"ခွေးကိုရိုက်သည်၊ လှေကိုလှော်သည်"</em>)။</li>
+                            <li>• <strong>လက်ခံသူ</strong> ကိုဖော်ပြလိုလျှင် <strong>"အား"</strong> သုံးသည် (ဥပမာ - <em>"ရတနာသုံးပါးအား အကုန်ငါလှူ၏"</em>)။</li>
+                            <li>• ဝါကျတစ်ခုအတွင်း နှစ်ခုလုံးပါလျှင် - <em>"တိုင်ကပ်နာရီ<strong>ကို</strong> ကျောင်းအုပ်ဆရာမကြီး<strong>အား</strong> ပေးအပ်လှူဒါန်းသည်"</em> ဟု သုံးရသည်။</li>
+                        </ul>
+                        <div class="bg-white p-2.5 rounded-lg border border-blue-200 space-y-1">
+                            <div class="text-rose-600">❌ <strong>အမှား -</strong> "လှေငယ်တောကြီးတစ်ခု <strong>အား</strong> လေ့လာစူးစမ်းမှုများ ပြုလုပ်လျက်ရှိကြောင်း"</div>
+                            <div class="text-emerald-700 font-medium">✔️ <strong>အမှန် -</strong> "လှေငယ်တောကြီးတစ်ခု <strong>ကို</strong> လေ့လာစူးစမ်းမှုများ ပြုလုပ်လျက်ရှိကြောင်း"</div>
+                            <div class="text-amber-800 pt-1 border-t border-slate-100 font-medium">
+                                ⭐ <strong>ခြွင်းချက် -</strong> နှစ်သက်မြတ်နိုးခြင်း၊ အလေးအမြတ်ပြုခြင်း သဘောကို ဖော်ပြလိုသောအခါ "ကို" အစား "အား" ကို သုံးနိုင်သည်။ (ဥပမာ - <em>"အရှင်မြတ်<strong>အား</strong> မပြတ်ဖူးမြင်လိုပါသည်"</em>)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. တို့ ၊ များ ၊ တွေ -->
+                    <div class="p-3.5 rounded-xl bg-blue-50/50 border border-blue-200 space-y-1.5">
+                        <div class="font-bold text-blue-900 text-sm">၃။ "တို့ ၊ များ ၊ တွေ" အသုံးကွဲပုံ</div>
+                        <ul class="space-y-1 text-slate-700">
+                            <li>• <strong>"တို့"</strong> = တစ်မျိုးတည်း သို့မဟုတ် နှီးနွယ်ပတ်သက်နေသော အမျိုးအစားတို့ကို <strong>အကြွင်းအကျန်မရှိ တစ်ပေါင်းတစ်စည်းတည်း</strong> ဖော်ပြလိုသောအခါ သုံးသည် (ဥပမာ - <em>"ငါတို့သည် မြန်မာနိုင်ငံနှင့် တိုင်းရင်းသားလူမျိုးများအပေါ် သစ္စာရှိပါမည်"</em>)။</li>
+                            <li>• <strong>"များ"</strong> = တစ်ခုမက များသောအရေအတွက်ကို ပြလိုလျှင် သုံးသည် (ဥပမာ - <em>"မိဘပြည်သူများကလည်း..."</em>)။</li>
+                            <li>• <strong>"တွေ"</strong> = ပြောဟန်တွင် သုံးသည် (ဥပမာ - <em>"မြောက်ပိုင်းဒေသတွေမှာ မိုးဆက်လက်ရွာပါမည်"</em>)။</li>
+                        </ul>
+                        <div class="bg-white p-2.5 rounded-lg border border-blue-200 space-y-1">
+                            <div class="text-slate-800 font-semibold">⚠️ "များ" နှင့် "တွေ" တွဲမသုံးနိုင်သော အရာ (၃) မျိုး -</div>
+                            <div class="text-slate-600">
+                                (၁) ကိန်းဂဏန်းများ (<em>၂၅ များ၊ ၁၀၀ တွေ</em> ❌)<br>
+                                (၂) နာမ်စားများ (<em>ငါ၊ သင်၊ မင်း</em> ❌)<br>
+                                (၃) တစ်ဦးတစ်ယောက်တည်းနှင့်သာ သက်ဆိုင်သည့်နာမ်များ (<em>ရန်ကုန်၊ မလှ</em> ❌)
+                            </div>
+                            <div class="pt-1 border-t border-slate-100">
+                                <span class="text-rose-600 block">❌ <strong>အမှား -</strong> "ရန်ကုန်တိုင်း၊ ဧရာဝတီတိုင်း၊ ပဲခူးတိုင်း<strong>တွေ(များ)</strong>မှာ မိုးရွာနိုင်ပါသည်" (ပဲခူးတိုင်း အများကြီးရှိသည့် အဓိပ္ပာယ်သက်ရောက်သွားသည်)</span>
+                                <span class="text-emerald-700 font-medium block">✔️ <strong>အမှန် -</strong> "ရန်ကုန်တိုင်း၊ ဧရာဝတီတိုင်း၊ ပဲခူးတိုင်း<strong>တို့</strong>မှာ နေရာကွက်၍ မိုးရွာနိုင်ပါသည်" (တိုင်းသုံးတိုင်းစလုံးဟု အဓိပ္ပာယ်ရသည်)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PART D: ဆယ်ပြည့်ကိန်းများ (Page 101) -->
+            <div id="gram-part-d" class="bg-white rounded-2xl p-4 border-2 border-purple-300 shadow-sm space-y-3 key-highlight-box">
+                <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-900">အပိုင်း (ဃ) - ဆယ်ပြည့်ကိန်းများ</span>
+                    <span class="text-[11px] text-purple-700 font-semibold">စာမျက်နှာ ၁၀၁ (အသစ်ဖြည့်စွက်ချက်)</span>
+                </div>
+                <h2 class="font-bold text-base text-slate-800">🔢 ဆယ်ပြည့်ကိန်းများ ရေတွက်ပုံ စည်းမျဉ်း</h2>
+
+                <div class="space-y-2.5 text-xs text-slate-800">
+                    <div class="bg-purple-50/70 p-3 rounded-xl border border-purple-200">
+                        <strong class="text-purple-900 block mb-1">၁။ ရိုးရိုးကိန်း (ဆယ်ပြည့်ကိန်း မဟုတ်လျှင်) -</strong>
+                        မျိုးပြစကားလုံး (ယောက်၊ စီး စသည်) ကို ကိန်းဂဏန်း၏ <strong>အနောက်က</strong> ထား၍ သုံးသည်။<br>
+                        <span class="text-emerald-700 font-semibold">ဥပမာ - "လူတစ်ယောက် ၊ ကားနှစ်စီး"</span>
+                    </div>
+
+                    <div class="bg-purple-50/70 p-3 rounded-xl border border-purple-200">
+                        <strong class="text-purple-900 block mb-1">၂။ ဆယ်ပြည့်ကိန်းများ (တစ်ဆယ်၊ နှစ်ဆယ်၊ တစ်ရာ၊ တစ်ထောင် စသည်) -</strong>
+                        မျိုးပြစကားလုံးကို ဆယ်ပြည့်ကိန်း၏ <strong>အရှေ့က</strong> ထားရသည်! မျိုးပြစကားလုံးအလိုက် ရှေ့တွင် <strong>"အ"</strong> ထည့်သည်လည်းရှိ၊ မထည့်သည်လည်းရှိသည်။<br>
+                        <span class="text-emerald-700 font-semibold">ဥပမာ - "လူအယောက် နှစ်ဆယ်" ("အ" ထည့်သည်) ၊ "ငွေကျပ်တစ်ထောင်" ("အ" မထည့်ပါ)</span>
+                    </div>
+
+                    <div class="bg-purple-50/70 p-3 rounded-xl border border-purple-200">
+                        <strong class="text-purple-900 block mb-1">၃။ မျိုးပြစကားလုံး ချန်၍သုံးခြင်း -</strong>
+                        အချို့ လူ၊ ပုဂ္ဂိုလ်၊ အရာဝတ္ထုများ၏ ဆယ်ပြည့်ကိန်းကို ရေတွက်သောအခါ မျိုးပြစကားလုံးကို ချန်၍လည်း သုံးနိုင်သည်။<br>
+                        <span class="text-emerald-700 font-semibold">ဥပမာ - "လူ နှစ်ဆယ် ၊ ငွေတစ်ထောင်"</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- =========================================================
+             TAB 3: စကားပြေ (PROSE SHORT ESSAYS FOR 6+ MARKS)
+             ========================================================= -->
+        <div id="tab-prose" class="tab-content hidden space-y-4">
+
+            <!-- Prose 1: မြန်မာစာတိုးတက်ပေဦးမည် -->
+            <div class="bg-white rounded-2xl p-4 border border-amber-200/80 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">စကားပြေ (၁)</span>
+                    <button onclick="copyById('prose-1-text')" class="text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-lg active:scale-95">📋 စာပိုဒ်ကူးရန်</button>
+                </div>
+                <h2 class="font-bold text-base text-slate-800">မြန်မာစာတိုးတက်ပေဦးမည် (ဆရာကြီး ဦးဖေမောင်တင်)</h2>
+
+                <!-- Key Skeleton Box (Always visible) -->
+                <div class="bg-amber-50/80 border border-amber-200 rounded-xl p-3 text-xs space-y-1.5 key-highlight-box">
+                    <div class="font-bold text-amber-900">🔑 အမှတ်ပြည့်ရမည့် အဓိကကျောရိုး (၃) ချက် -</div>
+                    <ul class="space-y-1 text-slate-800">
+                        <li>• <strong>ကျမ်းအမည် -</strong> "မြန်မာဝတ္ထုသမိုင်းအစနှင့် သုတေသနစာတမ်းများ"</li>
+                        <li>• <strong>ပထမအချက် -</strong> တိကျသေချာမှုရှိခြင်း (အဖိုးတန်အသုံးအနှုန်း မမြုပ်စေဖို့ + အပြစ်ရှာအချောသတ်ဖို့)</li>
+                        <li>• <strong>ဒုတိယအချက် -</strong> ရှင်းလင်းပြတ်သား၍ အဓိပ္ပာယ်ပေါ်လွင်ခြင်း (ရှင်မဟာရဋ္ဌသာရ သာဓက)</li>
+                        <li>• <strong>တတိယအချက် -</strong> ချောမောပြေပြစ်ရန်လိုခြင်း (ဝါကျတိုတိုရေး + ကတ္တား/ကံ/နာမ်စား သတိထား + တခြားလူအမြင်ဖြင့်ကြည့်)</li>
+                    </ul>
+                </div>
+
+                <!-- Condensed Full Essay Text -->
+                <div id="prose-1-text" class="space-y-2.5 text-xs sm:text-sm text-slate-700 myanmar-text pt-1">
+                    <p class="full-detail indent-6">
+                        "မြန်မာစာတိုးတက်ပေဦးမည်" ဆောင်းပါးသည် ဆရာကြီးဦးဖေမောင်တင်၏ "မြန်မာဝတ္ထုသမိုင်းအစနှင့် သုတေသနစာတမ်းများ" စာအုပ်မှ ကောက်နုတ်ချက်ဖြစ်သည်။ ဘာသာပြန်လုပ်ငန်း၏ အရေးကြီးပုံနှင့် မိမိစာပေဖွံ့ဖြိုးတိုးတက်မှုကို အထောက်အကူပေးနေကြောင်း သိရှိစေလိုသော ရည်ရွယ်ချက်ဖြင့် ရေးသားထားခြင်းဖြစ်သည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        ဘာသာပြန်ရာတွင် အရေးအကြီးဆုံး လိုက်နာရမည့် ပထမအချက်မှာ <strong>တိကျသေချာမှုရှိခြင်း</strong> ဖြစ်သည်။ မူရင်းဘာသာခြား အဖိုးတန်အသုံးအနှုန်းများကို မြုပ်မသွားစေဘဲ ပေါ်အောင်ပြန်ဆိုရမည်ဖြစ်ကြောင်း —
+                    </p>
+                    <blockquote class="bg-slate-50 border-l-4 border-amber-500 p-2.5 rounded-r-xl font-semibold text-slate-800 text-xs">
+                        "ဘာသာခြား အဖိုးတန်အသုံးအနှုန်းများကိုလည်း မြုပ်မသွားပါစေနှင့် ဖော်ပေးပါ။ မူရင်းအဖိုးတန်အသုံးအနှုန်းများမပါဝင်သော ဘာသာပြန်သည် အပြစ် ကင်းလွတ်မည်မဟုတ်ပေ"
+                    </blockquote>
+                    <p class="full-detail">
+                        ဟု လမ်းညွှန်ထားပါသည်။ ထို့ပြင် အပြစ်အနာအဆာရှာ၍ အချောသတ်နိုင်လေလေ စာကောင်းရလေလေဖြစ်သည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        ဒုတိယအရေးကြီးသောအချက်မှာ <strong>ရှင်းလင်းပြတ်သား၍ အဓိပ္ပာယ်ပေါ်လွင်မှုရှိခြင်း</strong> ဖြစ်သည်။ အဓိပ္ပာယ်ပေါ်လွင်မှု အရေးကြီးပုံကို —
+                    </p>
+                    <blockquote class="bg-slate-50 border-l-4 border-amber-500 p-2.5 rounded-r-xl font-semibold text-slate-800 text-xs">
+                        "ဘာသာပြန်စာကိုဖတ်ရာ၌ ခေါင်းကုတ်၍ စဉ်းစားနေလျှင် ဘာသာပြန်ခြင်း၏ အကျိုးဘယ်မှာရှိတော့မည်နည်း"
+                    </blockquote>
+                    <p class="full-detail">
+                        ဟု မိန့်ဆိုထားပြီး၊ ရှင်မဟာရဋ္ဌသာရ၏ စာများသည် ရှင်းလင်းလွယ်ကူသဖြင့် ယနေ့တိုင် ဖတ်ရှုမွေ့လျော်ကြဆဲဖြစ်ကြောင်း သာဓကပြထားသည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        နောက်ဆုံးအချက်မှာ <strong>ချောမောပြေပြစ်ရန်လိုခြင်း</strong> ဖြစ်သည်။ ဝါကျရှည်ကြီးများကိုရှောင်၍ ဝါကျတိုတိုဖြင့် တိကျမှန်ကန်အောင် ရေးသားရမည်ဖြစ်ပြီး၊ အင်္ဂလိပ်စာနှင့် မြန်မာစာ သဒ္ဒါအထားအသို မတူသဖြင့် နာမ်စားများကို သူ့နေရာနှင့်သူ သုံး၍ စကားဆက်စပ်ပေးရမည်ဖြစ်သည်။ ထို့ကြောင့် —
+                    </p>
+                    <blockquote class="bg-slate-50 border-l-4 border-amber-500 p-2.5 rounded-r-xl font-semibold text-slate-800 text-xs">
+                        "ဘာသာပြန်ဆိုရာတွင် မိမိစာကို အခြားလူတစ်ယောက်အမြင်ဖြင့် ကြည့်ပေးပါ။ ဘာသာပြန်၏တန်ဖိုးမှာ ဖတ်သူ၏ နားလည်လွယ်မှု၌တည်ကြောင်း သတိပြုပါ"
+                    </blockquote>
+                    <p class="full-detail">
+                        ဟူ၍ လမ်းညွှန်ထားပါသည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        အချုပ်အားဖြင့်ဆိုသော် ဤဆောင်းပါးသည် ဘာသာပြန်လုပ်ငန်းဆောင်ရွက်ရန် လိုက်နာရမည့် အချက်ကြီးသုံးချက်ကို လမ်းညွှန်ထားပြီး၊ ဘာသာပြန်လုပ်ငန်း အောင်မြင်လေလေ မြန်မာစာပေတိုးတက်ရေးကို အထောက်အကူပြုလေလေဖြစ်ကြောင်း သိရှိစေသော ဆောင်းပါးကောင်းတစ်ပုဒ် ဖြစ်ပါသည်။
+                    </p>
+                </div>
+            </div>
+
+            <!-- Prose 2: ရှေ့နေထူး ဦးတူ -->
+            <div class="bg-white rounded-2xl p-4 border border-amber-200/80 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">စကားပြေ (၂)</span>
+                    <button onclick="copyById('prose-2-text')" class="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg active:scale-95">📋 စာပိုဒ်ကူးရန်</button>
+                </div>
+                <h2 class="font-bold text-base text-slate-800">ရှေ့နေထူး ဦးတူ (မှော်ဘီဆရာသိန်း)</h2>
+
+                <!-- Key Skeleton Box -->
+                <div class="bg-emerald-50/80 border border-emerald-200 rounded-xl p-3 text-xs space-y-1.5 key-highlight-box">
+                    <div class="font-bold text-emerald-900">🔑 ဦးတူ၏ ထူးခြားသော စရိုက် (၄) ချက် -</div>
+                    <ul class="space-y-1 text-slate-800">
+                        <li>• <strong>စာအုပ်အမည် -</strong> "ဗဟုသုတ ဟင်းလေးအိုး"</li>
+                        <li>• <strong>(၁) အခေါ်အဝေါ် ယဉ်ကျေးခြင်း -</strong> ငယ်သူကို (ငါ့ညီ၊ ငါ့တူ)၊ ကြီးသူကို (အစ်ကို၊ ဦးလေး၊ ဘုရားဒကာ)</li>
+                        <li>• <strong>(၂) အစားအသောက် ကြေးမများခြင်း -</strong> ဟင်းချိုလေးနှင့် စားမြိန်ခြင်း + ကျောင်းသားများကို တစ်ကျပ်စီ ချီးမြှင့်ခြင်း</li>
+                        <li>• <strong>(၃) ကုသိုလ်ကောင်းမှု ဉာဏ်ယှဉ်ပြုခြင်း -</strong> သက်အာဆရာတော်အစား ဆင်းရဲသည့်သံဃာ အပါး ၅၀ ကို ဆွမ်းနှင့် သင်္ကန်းဒွိစုံ လှူခြင်း</li>
+                        <li>• <strong>(၄) လောကီ/လောကုတ္တရာ နှစ်ဖြာအကျိုးရှိအောင် နေထိုင်တတ်ခြင်း</strong></li>
+                    </ul>
+                </div>
+
+                <!-- Condensed Full Essay Text -->
+                <div id="prose-2-text" class="space-y-2.5 text-xs sm:text-sm text-slate-700 myanmar-text pt-1">
+                    <p class="full-detail indent-6">
+                        "ရှေ့နေထူး ဦးတူ" စကားပြေကို မှော်ဘီဆရာသိန်း၏ "ဗဟုသုတ ဟင်းလေးအိုး" စာအုပ်မှ ထုတ်နုတ်ထားပါသည်။ ရှေ့နေထူးတစ်ဦး၏ မွန်မြတ်လှသော စိတ်ဓာတ်ကို လေးစားအတုယူစေလိုသော ရည်ရွယ်ချက်ဖြင့် ရေးသားထားခြင်းဖြစ်သည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        ဦးတူသည် လူအများနှင့် ဆက်ဆံရာ၌ မေတ္တာရှေ့ထားပြီး၊ ငယ်သူကို ငါ့ညီ၊ ငါ့တူ၊ ငါ့နှမ ဟူ၍လည်းကောင်း၊ ကြီးသူကို အစ်ကို၊ အစ်မ၊ ဦးလေး၊ ဘုရားဒကာ စသည်ဖြင့်လည်းကောင်း လူလူချင်း လေးစားမြတ်နိုးစွာ ခေါ်ဝေါ်ဆက်ဆံတတ်သည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        ထို့ပြင် ဦးတူသည် အစားအသောက် ကြေးမများဘဲ အိမ်သူချက်ကျွေးသမျှကို မညည်းမညူ စားသောက်လေ့ရှိသည်။ ဇနီးဖြစ်သူက ဟင်းချိုလေးချက်ဖို့ မေးသောအခါ ဦးတူက —
+                    </p>
+                    <blockquote class="bg-slate-50 border-l-4 border-emerald-500 p-2.5 rounded-r-xl font-semibold text-slate-800 text-xs">
+                        "ရှင်မ၊ နေ့စဉ်အမဲ၊ ဝက်ကြက်တို့ကို စားသောက်နေရတာ ညှီစော်နံလှပြီ။ အီတယ် ထမင်းမဝင်နိုင်ဘူး၊ ဟင်းချိုလေးများ သောက်စားရလျှင် အလွန် ကောင်းမယ်၊ ထမင်းလည်း စားမြိန်မှာပဲ"
+                    </blockquote>
+                    <p class="full-detail">
+                        ဟု အလိုက်သင့် ပြန်ပြောတတ်သည်။ ထို့ပြင် အမှုသည်များနှင့် ဆင်းရဲသူများကို ညှာတာထောက်ထားတတ်သလို၊ ကျောင်းသားများနှင့်တွေ့လျှင်လည်း စာပေကြိုးစားကြဟုဆိုကာ ငွေတစ်ကျပ်စီ ချီးမြှင့်တတ်သည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        ဦးတူသည် ကုသိုလ်ကောင်းမှု၌လည်း နံနက်တိုင်း ဆွမ်းလောင်းခြင်း၊ အိမ်ရှေ့၌ ရေအိုးစင်တည်၍ ရေလှူခြင်းတို့ကို ပြုလုပ်တတ်သည်။ တစ်ခါက သက်အာဆရာတော်ကြွလာရာ အိမ်ရှင်မက ဆွမ်းကပ်ချင်သော်လည်း ဆရာတော်မှာ မင်းကိုးကွယ်သောဘုန်းကြီးဖြစ်၍ ဆွမ်းပေါများသဖြင့် ဘုဉ်းပေးနိုင်မည်မဟုတ်ကြောင်း ရှင်းပြပြီး၊ ပစ္စည်းလေးပါးဆင်းရဲသည့် သံဃာတော်အပါးငါးဆယ်ကို ဆွမ်းနှင့် သင်္ကန်းဒွိစုံ ကပ်လှူခဲ့သည်။ ထိုအခါ အိမ်သူသဒ္ဓါတရားတိုးအောင် —
+                    </p>
+                    <blockquote class="bg-slate-50 border-l-4 border-emerald-500 p-2.5 rounded-r-xl font-semibold text-slate-800 text-xs">
+                        "ကြည့်စမ်းရှင်မ၊ ကိုယ်တော်တွေ ဘုဉ်းပေးလိုက်ကြတာ တယ် ကြည်ညိုဖို့ ကောင်းပေတယ်"
+                    </blockquote>
+                    <p class="full-detail">
+                        ဟူ၍ အတုယူမှတ်သားဖွယ် ပြောဆိုတတ်သည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        အချုပ်အားဖြင့်ဆိုသော် ဦးတူသည် လောကီ၊ လောကုတ္တရာ စာပေအခြေခံရှိပြီး ပစ္စုပ္ပန်၊ သံသရာ အကျိုးများအောင် နေထိုင်တတ်သူဖြစ်သည်။ သာမန်ထက်ပိုသော စိတ်ဓာတ်၊ ခံယူချက်နှင့် အပြုအမူများကြောင့် မှော်ဘီဆရာသိန်းက "ရှေ့နေထူး" ဟု ခေါ်ဆိုထားခြင်း ဖြစ်ပါသည်။
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================================================
+             TAB 4: ကဗျာ (POETRY SHORT ESSAYS FOR 6+ MARKS)
+             ========================================================= -->
+        <div id="tab-poetry" class="tab-content hidden space-y-4">
+
+            <!-- Poem 1: ပိန်းကောလှေငယ်ရှင် -->
+            <div class="bg-white rounded-2xl p-4 border border-amber-200/80 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">ကဗျာ (၁)</span>
+                    <button onclick="copyById('poem-1-text')" class="text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-lg active:scale-95">📋 စာပိုဒ်ကူးရန်</button>
+                </div>
+                <h2 class="font-bold text-base text-slate-800">ပိန်းကောလှေငယ်ရှင် (ဝန်ကြီးပဒေသရာဇာ)</h2>
+
+                <!-- Key Skeleton Box -->
+                <div class="bg-blue-50/80 border border-blue-200 rounded-xl p-3 text-xs space-y-1.5 key-highlight-box">
+                    <div class="font-bold text-blue-900">🔑 အဓိကအချက်များ (ညောင်ရမ်းခေတ် တျာချင်းကဗျာ) -</div>
+                    <ul class="space-y-1 text-slate-800">
+                        <li>• <strong>ရည်ရွယ်ချက် -</strong> ပန်းလောင်မြစ်တကြောတွင် အထက်အညာမှ အောက်ပြည်သို့ ခရီးနှင်ရသော လှေသမားဘဝကို ဖော်ပြလို၍။</li>
+                        <li>• <strong>ရုန်းကန်ရပုံ -</strong> ပဲ့ကိုင်မပါ တစ်ကိုယ်တည်း ခရီးနှင်ခြင်း၊ ထိုးဝါးကို ဘယ်ညာပခုံးတင်၍ ခြေဖြင့်ကျောက်ကန် တွန်းထိုးရခြင်း။</li>
+                        <li>• <strong>စားသောက်ရပုံ -</strong> ချွေးဒီးဒီးကျလျက် ထမင်းချက်ရပြီး စလောင်းနှင့် ငါးပိကင်၊ ချဉ်ပေါင်ဟင်းပူပူဖြင့် ဖြစ်သလိုစားရခြင်း။</li>
+                        <li>• <strong>ချီးကျူးချက် -</strong> လမိုင်းနတ်အား ပူဇော်ပြီး ဘဝတူအဖော်များနှင့် ရောင့်ရဲတင်းတိမ် ပျော်ရွှင်စွာနေတတ်ခြင်း။</li>
+                    </ul>
+                </div>
+
+                <!-- Condensed Full Essay Text -->
+                <div id="poem-1-text" class="space-y-2.5 text-xs sm:text-sm text-slate-700 myanmar-text pt-1">
+                    <p class="full-detail indent-6">
+                        "ပိန်းကောလှေငယ်ရှင်" ကဗျာသည် ညောင်ရမ်းခေတ် စာဆို ဝန်ကြီးပဒေသရာဇာ၏ ဘဝသရုပ်ဖော် တျာချင်းကဗျာတစ်ပုဒ် ဖြစ်သည်။ ပန်းလောင်မြစ်တကြောတွင် ပိန်းကောလှေဖြင့် အထက်အညာမှ အောက်ပြည်သို့ ခရီးနှင်ရသော လှေသမား၏ဘဝကို ဖော်ပြလိုသော ရည်ရွယ်ချက်ဖြင့် ရေးဖွဲ့ထားခြင်း ဖြစ်သည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        လှေငယ်ရှင်သည် ကုန်စည်ရောင်းဝယ်ရန် ပဲ့ကိုင်မည့်အဖော်မပါဘဲ တစ်ကိုယ်တည်း ခရီးနှင်ရပုံကို —
+                    </p>
+                    <blockquote class="bg-slate-50 border-l-4 border-blue-500 p-2.5 rounded-r-xl font-semibold text-slate-800 text-xs">
+                        "တောင်ဘက်ကယ်တစ်ခွင်၊ ထွက်ဝင်ဖောက်ကား၊ ပဲ့ပါမည့်သူ မပါလှာ၊ ထိုးသူ တစ်ယောက်သားငယ်နှင့်လေး"
+                    </blockquote>
+                    <p class="full-detail">
+                        ဟူ၍ တင်ပြထားသည်။ ငါးပိ၊ ဆားများနှင့် လဲလှယ်ရန် ပဲမျိုးစုံကို လှေအပြည့်တင်ကာ ဝါးခမောက်ဆောင်းပြီး ထိုးဝါးကို ဘယ်ညာပခုံးတင်၍ ခြေဖြင့်ကျောက်ကန် တွန်းထိုးရပုံကို —
+                    </p>
+                    <blockquote class="bg-slate-50 border-l-4 border-blue-500 p-2.5 rounded-r-xl font-semibold text-slate-800 text-xs">
+                        "ထိုးဝါးကိုယ်မှာ၊ ဘယ်ညာပခုံး၊ ခြေနှင့်ကျောက်ကန် တွန်းလိုက်လှန်၊ အားအန်လွန်ကြိုးဆုံးငယ်နှင့်လေး"
+                    </blockquote>
+                    <p class="full-detail">
+                        ဟု ဖော်ပြထားသည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        ထို့ပြင် ခါးတောင်းကျိုက်ကာ ချွေးဒီးဒီးကျလျက် မီးအိုးကင်းဖြင့် ထမင်းချက်ရသော်လည်း မိုးဦးလေဦးဖြစ်၍ မီးတောက်တစ်လှည့် ငြိမ်းတစ်လှည့်ဖြင့် ထမင်းမနပ်နိုင်ဘဲ ရှိနေတတ်သည်။ ထမင်းကိစ္စပြီးသောအခါ စလောင်းနှင့် ငါးပိကင်၊ အဖူးအရွက်စုံ ရောချက်ထားသော ချဉ်ပေါင်ဟင်းပူပူဖြင့် ဖြစ်သလို စားသောက်ရပုံကို —
+                    </p>
+                    <blockquote class="bg-slate-50 border-l-4 border-blue-500 p-2.5 rounded-r-xl font-semibold text-slate-800 text-xs">
+                        "စလောင်းနှင့် ငါးပိကင်၊ လှေဆိုက်တည့်လျှင်၊ ကြေးလင်နှင့်ကျင်း၊ ရိုးရွက်ကယ်ဖူးပေါင်၊ အာပါးကိုလောင် ချဉ်ပေါင်ပူလှသည့် ဟင်းငယ်နှင့်လေး"
+                    </blockquote>
+                    <p class="full-detail">
+                        ဟု ကရုဏာသက်ဖွယ် ရေးဖွဲ့ထားသည်။ သို့သော် ထမင်းမစားမီ ထမင်းတစ်ဆုပ်ဖြင့် လမိုင်းနတ်အား ပူဇော်လေ့ရှိပြီး၊ ဘဝတူအဖော်များနှင့် ပျော်ရွှင်စွာ စုပေါင်းစားသောက်ကာ ဘဝကြမ်းတမ်းသော်လည်း ရောင့်ရဲတင်းတိမ်ပုံကို —
+                    </p>
+                    <blockquote class="bg-slate-50 border-l-4 border-blue-500 p-2.5 rounded-r-xl font-semibold text-slate-800 text-xs">
+                        "စားမိစားရာ ဝမ်းမှာကျင့်တော့သည်၊ ပိန်းကောလှေသူကြီးမှာ ချမ်းသာ မြင့်တော့သည်"
+                    </blockquote>
+                    <p class="full-detail">
+                        ဟု ချီးကျူးထားသည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        အချုပ်အားဖြင့်ဆိုသော် စာဆိုသည် ပိန်းကောလှေငယ်ရှင်၏ ရေစုန်ရေဆန်ခရီးတွင် လှုပ်ရှားရုန်းကန် နေထိုင်စားသောက်ရပုံတို့ကို စာနာစိတ်ဖြင့် ပေါ်လွင်အောင် ရေးဖွဲ့တင်ပြထားပါသည်။
+                    </p>
+                </div>
+            </div>
+
+            <!-- Poem 2: ဝေရွှန်းစန္ဒာ -->
+            <div class="bg-white rounded-2xl p-4 border border-amber-200/80 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-800">ကဗျာ (၂)</span>
+                    <button onclick="copyById('poem-2-text')" class="text-xs font-semibold text-purple-700 bg-purple-50 border border-purple-200 px-2.5 py-1 rounded-lg active:scale-95">📋 စာပိုဒ်ကူးရန်</button>
+                </div>
+                <h2 class="font-bold text-base text-slate-800">ဝေရွှန်းစန္ဒာ (လက်ဝဲသုန္ဒရအမတ်ကြီး)</h2>
+
+                <!-- Key Skeleton Box -->
+                <div class="bg-purple-50/80 border border-purple-200 rounded-xl p-3 text-xs space-y-1.5 key-highlight-box">
+                    <div class="font-bold text-purple-900">🔑 အဓိကအချက်များ (ကုန်းဘောင်ခေတ် ပိုဒ်စုံရတု) -</div>
+                    <ul class="space-y-1 text-slate-800">
+                        <li>• <strong>နောက်ခံသမိုင်း -</strong> ဆင်ဖြူရှင်မင်းလက်ထက် မဲဇာတောသို့ အပို့ခံရစဉ် လွမ်းဒုက္ခကို မျှဝေခံစားနိုင်စေရန် ရေးဖွဲ့ခဲ့သည်။</li>
+                        <li>• <strong>ပထမပိုဒ် -</strong> ရာသီဥတုဆိုးရွားသော မဲဇာတောနှင့် ရတနာသိင်္ဃကုန်းဘောင်နေပြည်တော်ကို နှိုင်းယှဉ်လွမ်းဆွတ်ခြင်း။</li>
+                        <li>• <strong>ဒုတိယပိုဒ် -</strong> အိပ်ရာဝင် အိပ်ရာထ ရွှေနန်းတော်သို့ ရှိခိုးကန်တော့ပြီး အရှင်သခင်၏ သစ္စာတော်ကို စောင့်သိပုံ။</li>
+                        <li>• <strong>တတိယပိုဒ် -</strong> ဇနီးသည်နှင့် ရွှေတုံးရွှေခဲပမာ သားသမီးသုံးယောက်ကို ရင်ခွင်ထဲပွေ့ဖက်ချင်စိတ်ဖြင့် လွမ်းဆွတ်ပုံ။</li>
+                    </ul>
+                </div>
+
+                <!-- Condensed Full Essay Text -->
+                <div id="poem-2-text" class="space-y-2.5 text-xs sm:text-sm text-slate-700 myanmar-text pt-1">
+                    <p class="full-detail indent-6">
+                        "ဝေရွှန်းစန္ဒာ" ကဗျာသည် ကုန်းဘောင်ခေတ်စာဆို လက်ဝဲသုန္ဒရအမတ်ကြီး၏ ပိုဒ်စုံရတုကဗျာတစ်ပုဒ် ဖြစ်သည်။ ဆင်ဖြူရှင်မင်းလက်ထက်တွင် မဲဇာတောသို့ အပို့ခံရစဉ် စာဆိုတွေ့ကြုံခံစားနေရသော လွမ်းဒုက္ခကို သိရှိပြီး မျှဝေခံစားနိုင်စေရန် ရည်ရွယ်၍ ရေးဖွဲ့ခဲ့ခြင်း ဖြစ်သည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        ပထမပိုဒ်တွင် စာဆိုက မြူလွင်များရစ်ဆိုင်းပြီး ရာသီဥတုဆိုးရွားလှသော မဲဇာတောကြီးနှင့် နေရောင်အောက်တွင် ရတနာကိုးပါး စီခြယ်ထားသဖြင့် တလက်လက်တောက်ပနေမည့် ရတနာသိင်္ဃကုန်းဘောင်နေပြည်တော် ရွှေနန်းတော်ကြီးကို နှိုင်းယှဉ်ကာ လွမ်းဆွေးတသနေမိကြောင်း တင်ပြထားသည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        ဒုတိယပိုဒ်တွင်မူ ရတနာသိင်္ဃကုန်းဘောင်ရွှေနန်းဆီသို့ အိပ်ရာဝင် အိပ်ရာထ အမြဲမပြတ် ရှိခိုးကန်တော့ပါကြောင်းနှင့် မိမိအရှင်သခင်၏ သစ္စာတော်ကို အစဉ်စောင့်သိပါကြောင်း ဖော်ပြထားသည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        နောက်ဆုံးပိုဒ်တွင် မိုးလရာသီဖြစ်သဖြင့် နေပြည်တော်သူတို့သည် ဘုရားစေတီများ ဖူးမြော်ခြင်း၊ ဥပုသ်သီတင်းစောင့်ခြင်းနှင့် အလှူပြုခြင်းတို့ကို ပြုလုပ်နေကြမည်ဟု စိတ်ကူးဖြင့် မြင်ယောင်မိကြောင်း ဖော်ပြထားသည်။ ထို့နောက် ဆယ်ကျော်သက်ကပင် ကြင်ဖော်ဖြစ်ခဲ့ပြီး သားသမီးသုံးယောက်၏ မိခင်ဖြစ်သော ဇနီးသည်နှင့် ဝေးကွာနေရပုံကို —
+                    </p>
+                    <blockquote class="bg-slate-50 border-l-4 border-purple-500 p-2.5 rounded-r-xl font-semibold text-slate-800 text-xs">
+                        "ညွန့်မြကျိုးဆက်၊ ဆယ်ကျော်သက်က၊ ကြင်ဖက်အတူ တောင်းဆုယူသည်၊ အိမ်သူချောသွယ်၊ သုံးယောက်မယ်နှင့် ပင်လယ်ခြားရာ၊ ခရီးကွာသို့"
+                    </blockquote>
+                    <p class="full-detail">
+                        ဟူ၍လည်းကောင်း၊ ရွှေတုံးရွှေခဲပမာ ချစ်စရာကောင်းသော သားသမီးသုံးယောက်က ဖခင်၏ရင်ခွင်ထဲ တိုးဝှေ့ပွေ့ဖက်ကာ လည်ပင်းကို သိုင်းဖက်ချင်ကြမည့် အသွင်ကို မှန်းဆလွမ်းဆွတ်မိပုံကို —
+                    </p>
+                    <blockquote class="bg-slate-50 border-l-4 border-purple-500 p-2.5 rounded-r-xl font-semibold text-slate-800 text-xs">
+                        "ရင်သွေးရွှေတောင်၊ သားမောင်နှမ၊ ဆင်းသိင်္ဂါတို့၊ မွေးဖရင်ခွင်၊ ရွှေလက်တင်၍၊ ယူငင်ပိုက်ဖြား၊ ပျော်မည်များနှင့်၊ နှစ်ပါးမျက်ခြည်၊ သားနှင်းရည်သည် ရွှေလည်ဆွဲချင်ရှာလိမ့်မည်"
+                    </blockquote>
+                    <p class="full-detail">
+                        ဟူ၍လည်းကောင်း ကရုဏာသက်ဖွယ် ရေးဖွဲ့ထားသည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        အချုပ်အားဖြင့်ဆိုသော် အမတ်ကြီးသည် နေပြည်တော်နှင့် အရှင်သခင်ကို လွမ်းဆွတ်ရာမှ ဇနီးနှင့် သားသမီးတို့ကို လွမ်းဆွတ်သတိရပုံအထိ တစ်ဆင့်ပြီးတစ်ဆင့် တင်ပြထားရာ၊ ဖတ်ရှုသူကိုပါ ထပ်တူခံစားမိစေသော အရေးအဖွဲ့စွမ်းရည် ထက်မြက်လှသည့် ကဗျာကောင်းတစ်ပုဒ် ဖြစ်ပါသည်။
+                    </p>
+                </div>
+            </div>
+
+            <!-- Poem 3: ရှေးခေတ်ပုဂံပြည် -->
+            <div class="bg-white rounded-2xl p-4 border border-amber-200/80 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">ကဗျာ (၃)</span>
+                    <button onclick="copyById('poem-3-text')" class="text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-lg active:scale-95">📋 စာပိုဒ်ကူးရန်</button>
+                </div>
+                <h2 class="font-bold text-base text-slate-800">ရှေးခေတ်ပုဂံပြည် (ဆရာဇော်ဂျီ)</h2>
+
+                <!-- Key Skeleton Box -->
+                <div class="bg-amber-50/80 border border-amber-200 rounded-xl p-3 text-xs space-y-1.5 key-highlight-box">
+                    <div class="font-bold text-amber-900">🔑 အဓိကအချက်များ (ဇာတိမာန်စည်းရုံးရေးကဗျာ) -</div>
+                    <ul class="space-y-1 text-slate-800">
+                        <li>• <strong>ရည်ရွယ်ချက် -</strong> ရှေးခေတ်ပုဂံပြည်ကြီး၏ ဂုဏ်ရည်တို့ကို ချီးကျူးဖော်ထုတ်ပြရင်း မိမိတိုင်းပြည်နှင့် လူမျိုးဂုဏ်ကို မြှင့်တင်ပေးရန်။</li>
+                        <li>• <strong>ပထမပိုင်း -</strong> အနော်ရထာမင်း အုပ်ချုပ်ခဲ့သော ပုဂံခေတ်သည် မော်ကြွားစရာ ခေတ်ထူးဖြစ်ပုံ။</li>
+                        <li>• <strong>ဒုတိယပိုင်း -</strong> အောင်ပွဲမှပြန်လာသော သားဖြစ်သူကို မိခင်က ဝမ်းမြောက်ဂုဏ်ယူကာ ချီးမွမ်းပုံ။</li>
+                        <li>• <strong>တတိယပိုင်း -</strong> ပုဂံစစ်သည်လေးက မိခင်ကို စိတ်မပူရန်နှင့် တိုင်းပြည်အတွက် အသက်ပင်စွန့်ဝံ့ကြောင်း ပြောကြားပုံ။</li>
+                    </ul>
+                </div>
+
+                <!-- Condensed Full Essay Text -->
+                <div id="poem-3-text" class="space-y-2.5 text-xs sm:text-sm text-slate-700 myanmar-text pt-1">
+                    <p class="full-detail indent-6">
+                        "ရှေးခေတ်ပုဂံပြည်" ကဗျာကို ဆရာဇော်ဂျီ ရေးဖွဲ့ခဲ့ပါသည်။ ရှေးခေတ်ပုဂံပြည်ကြီး၏ လေးစားအားကျဖွယ် ဂုဏ်ရည်တို့ကို ချီးကျူးဖော်ထုတ်ပြရင်း မိမိတိုင်းပြည်နှင့် လူမျိုး၏ဂုဏ်ကို မြှင့်တင်ပေးသော ဇာတိမာန်စည်းရုံးရေးကဗျာ ဖြစ်သည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        ကဗျာအစတွင် တိုင်းချစ်ပြည်ချစ်စိတ် ထက်သန်လာစေရန် အနော်ရထာမင်း အုပ်ချုပ်ခဲ့သော ပုဂံခေတ်သည် မြန်မာတို့အတွက် မော်ကြွားစရာ ခေတ်ထူးဖြစ်ကြောင်းကို —
+                    </p>
+                    <blockquote class="bg-slate-50 border-l-4 border-amber-500 p-2.5 rounded-r-xl font-semibold text-slate-800 text-xs">
+                        "မင်းကောင်း နော်ရထာတဲ့၊ မော်စရာ ဟိုတစ်ခေတ်ကိုဖြင့်"
+                    </blockquote>
+                    <p class="full-detail">
+                        ဟူ၍ ဖော်ပြထားသည်။ ထို့နောက် အောင်ပွဲမှပြန်လာသော သားဖြစ်သူကို မိခင်က ကြည့်၍ ဝမ်းမြောက်ဂုဏ်ယူကာ ချီးမွမ်းဟန်ကို —
+                    </p>
+                    <blockquote class="bg-slate-50 border-l-4 border-amber-500 p-2.5 rounded-r-xl font-semibold text-slate-800 text-xs">
+                        "လာစမ်းဟဲ့ - မေ့သား၊ အမယ်မင်းထွားလိုက်တာ၊ စစ်သားကြီးလုံးလုံး စစ်ဗိုလ်မှူးကြီးရှုံးလောက်ရဲ့၊ ပခုံးနဲ့လက်ပြင် ကြောခြင်က သံချောင်း၊ တစ်နှစ်အတွင်းမှာ ချက်ချင်းပဲ ပြောင်းရော"
+                    </blockquote>
+                    <p class="full-detail">
+                        ဟု ရေးဖွဲ့ထားရာ ပုဂံသူပုဂံသားတို့၏ ဇာတိမာန်ကို ပေါ်လွင်စေပါသည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        ထို့ပြင် ပုဂံစစ်သည်လေးကလည်း မိခင်ကို သူ့အတွက် စိတ်မပူရန်နှင့် တိုင်းပြည်အတွက် အသက်ပင်စွန့်ဝံ့ကြောင်းကို —
+                    </p>
+                    <blockquote class="bg-slate-50 border-l-4 border-amber-500 p-2.5 rounded-r-xl font-semibold text-slate-800 text-xs">
+                        "သားလှတွက်တာ နောင်များဖြင့်ပူပါနဲ့၊ ပုဂံမှာမွေး မြန်မာသွေးမို့၊ အလေးမမူ အသက်ပင်လှူခဲ့ပေါ့၊ ပြည်သူ့သက်စွန့် လက်ရုံးအင် သည်တစ်အားနဲ့၊ ဘယ်တိုင်းခြားဝံ့မတုံး"
+                    </blockquote>
+                    <p class="full-detail">
+                        ဟူ၍ ရေးဖွဲ့ထားသည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        အချုပ်အားဖြင့်ဆိုသော် ဆရာဇော်ဂျီသည် ပုဂံပြည်သူများ စည်းလုံးညီညွတ်ပုံ၊ ပုဂံစစ်သည်တို့၏ ဇာတိမာန်ကြီးမားပုံနှင့် သာသနာရောင်ထွန်းလင်းပုံတို့ကို တင်ပြပြီး၊ မိမိတို့ခေတ်အလျောက် နိုင်ငံနှင့်လူမျိုးအကျိုးကို သယ်ပိုးလိုစိတ် နိုးကြားလာအောင် စည်းရုံးလှုံ့ဆော်ထားသော ကဗျာကောင်းတစ်ပုဒ် ဖြစ်ပါသည်။
+                    </p>
+                </div>
+            </div>
+
+            <!-- Poem 4: မတ်လတော်လှန်ရေး -->
+            <div class="bg-white rounded-2xl p-4 border border-amber-200/80 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800">ကဗျာ (၄)</span>
+                    <button onclick="copyById('poem-4-text')" class="text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-lg active:scale-95">📋 စာပိုဒ်ကူးရန်</button>
+                </div>
+                <h2 class="font-bold text-base text-slate-800">မတ်လတော်လှန်ရေး (ဆရာဒဂုန်တာရာ)</h2>
+
+                <!-- Key Skeleton Box -->
+                <div class="bg-rose-50/80 border border-rose-200 rounded-xl p-3 text-xs space-y-1.5 key-highlight-box">
+                    <div class="font-bold text-rose-900">🔑 အဓိကအချက်များ (၁၉၄၆-၄၇ တာရာမဂ္ဂဇင်း) -</div>
+                    <ul class="space-y-1 text-slate-800">
+                        <li>• <strong>ရည်ရွယ်ချက် -</strong> ဖက်ဆစ်ဂျပန်တို့ကို တွန်းလှန်တိုက်ထုတ်ခဲ့သည့် မြန်မာ့တော်လှန်ရေးသမားတို့၏ စိတ်ဓာတ်နှင့် စွမ်းရည်ကို အမှတ်တရရှိစေရန်။</li>
+                        <li>• <strong>အရုဏ်ဦးမြင်ကွင်း -</strong> အရုဏ်တက်ခါနီး မြူခိုးများ ဝေ့ဆိုင်းနေသည့် သဘာဝမြင်ကွင်း သရုပ်ဖော်ပုံ။</li>
+                        <li>• <strong>တိုက်ပွဲမြင်ကွင်း -</strong> ပျောက်ကျားရဲဘော်က ဖက်ဆစ်ကင်းစခန်းကို လက်ပစ်ဗုံးဖြင့် တိုက်ခိုက်ရာ သေနတ်သံများ မြစ်ပြင်ယံ၌ ပဲ့တင်ထပ်ပုံ။</li>
+                        <li>• <strong>တော်လှန်ရေးသရုပ် -</strong> လေထီးဖြင့် ရိက္ခာချပေးပုံ၊ မီးလောင်ပြင်ရွာပျက်မှ ခွေးပိန်လေး၏ အော်မြည်သံနှင့် ကြယ်ဖြူတော်လှန်ရေးအလံဖြင့် ခေတ်သစ်သို့ ပြောင်းလဲပုံ။</li>
+                    </ul>
+                </div>
+
+                <!-- Condensed Full Essay Text -->
+                <div id="poem-4-text" class="space-y-2.5 text-xs sm:text-sm text-slate-700 myanmar-text pt-1">
+                    <p class="full-detail indent-6">
+                        "မတ်လတော်လှန်ရေး" ကဗျာကို ၁၉၄၆-၄၇ ခုနှစ်ထုတ် တာရာမဂ္ဂဇင်းတွင် ဆရာဒဂုန်တာရာ ရေးဖွဲ့ခဲ့ပါသည်။ ဖက်ဆစ်ဂျပန်တို့ကို တွန်းလှန်တိုက်ထုတ်ခဲ့သည့် မြန်မာ့တော်လှန်ရေးသမားတို့၏ စိတ်ဓာတ်နှင့် စွမ်းရည်ကို သိရှိပြီး အမှတ်တရရှိစေရန် ရည်ရွယ်ပါသည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        စာဆိုသည် အရုဏ်တက်ခါနီး မြူခိုးများ ဝေ့ဆိုင်းနေသည့် သဘာဝမြင်ကွင်းကို —
+                    </p>
+                    <blockquote class="bg-slate-50 border-l-4 border-rose-500 p-2.5 rounded-r-xl font-semibold text-slate-800 text-xs">
+                        "မိုးပြာသို့ခြယ်၊ ပတ္တမြားရည်၊ စီးသည်အရုဏ်၊ နီမြန်းကုန်သည်၊ အရစ်ပေါ်စ မိုးတိမ်ဝယ်.."
+                    </blockquote>
+                    <p class="full-detail">
+                        ဟူ၍ သရုပ်ဖော်ထားသည်။ ထို့နောက် မြစ်ဆိပ်နှင့် မနီးမဝေးရှိ ဖက်ဆစ်ကင်းစောင့်စခန်းသို့ လှေတစ်စင်းဖြင့် ချဉ်းကပ်လာသော ပျောက်ကျားရဲဘော်တစ်ဦးက လက်ပစ်ဗုံးဖြင့် ပစ်ခတ်တိုက်ခိုက်လိုက်ပုံနှင့် သေနတ်သံများ မြစ်ပြင်ယံ၌ ပဲ့တင်ထပ်သွားပုံကို —
+                    </p>
+                    <blockquote class="bg-slate-50 border-l-4 border-rose-500 p-2.5 rounded-r-xl font-semibold text-slate-800 text-xs">
+                        "ဖြိုခွင်းပြင်းထန်၊ သေနတ်သံသည်၊ မြစ်ယံပဲ့တင် ထပ်သတည်း"
+                    </blockquote>
+                    <p class="full-detail">
+                        ဟူ၍ အားမာန်အပြည့်ဖြင့် ရေးဖွဲ့ထားသည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        ထို့ပြင် လရောင်အောက်၌ မဟာမိတ်လေယာဉ်မှ လေထီးများဖြင့် စားနပ်ရိက္ခာချပေးပုံနှင့် ဖက်ဆစ်တို့ မီးရှို့ခဲ့သော ရွာပျက်မှ ခွေးပိန်ကလေး၏ အော်မြည်သံ စသည့် ကြေကွဲဖွယ်မြင်ကွင်းများကိုလည်း ဖော်ပြထားသည်။ နွေဦးကာလ မတ်လတွင် ကြယ်ဖြူအမှတ်အသားပါ အနီရောင်တော်လှန်ရေးအလံဖြင့် ဖက်ဆစ်တို့ကို တော်လှန်ကာ ခေတ်သစ်သို့ ပြောင်းလဲပုံကို —
+                    </p>
+                    <blockquote class="bg-slate-50 border-l-4 border-rose-500 p-2.5 rounded-r-xl font-semibold text-slate-800 text-xs">
+                        "ရွက်ဟောင်းစွန့်ပစ်၊ ဘဝသစ်သို့၊ သနစ်ပြောင်းမည်၊ ဖူးသစ်စီသည်၊ အနီထဲမှ ကြယ်ဖြူတစ်ပွင့်"
+                    </blockquote>
+                    <p class="full-detail">
+                        ဟူ၍ ရေးဖွဲ့ထားသည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        အချုပ်အားဖြင့်ဆိုသော် ဤကဗျာသည် ရက်စက်ရိုင်းပြသည့် ဖက်ဆစ်ဂျပန်တို့ကို မဟုတ်မခံ တော်လှန်တိုက်ခိုက်ခဲ့ကြသည့် မြန်မာပြည်သူတို့၏ အားမာန်နှင့် မျိုးချစ်စိတ်ဓာတ်ကို ပေါ်လွင်ထင်ရှားအောင် ဖွဲ့ဆိုထားသော ကဗျာကောင်းတစ်ပုဒ် ဖြစ်ပါသည်။
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================================================
+             TAB 5 (NEW): ရုံးသုံးစာ / လုပ်ငန်းသုံးစာ (3 ITEMS ONLY)
+             ========================================================= -->
+        <div id="tab-office" class="tab-content hidden space-y-4">
+
+            <!-- Quick Sub-navigation pills for Office Tab -->
+            <div class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
+                <a href="#office-part-1" class="shrink-0 px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-900 border border-amber-300">၁။ လုပ်ငန်းသုံး မြန်မာစကားပြေ</a>
+                <a href="#office-part-2" class="shrink-0 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-900 border border-emerald-300">၂။ နှိုးဆော်စာ</a>
+                <a href="#office-part-3" class="shrink-0 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-900 border border-blue-300">၃။ ခွင့်စာ</a>
+            </div>
+
+            <!-- 1. လုပ်ငန်းများတွင် မြန်မာစကားပြေ၏ အခန်းကဏ္ဍအရေးကြီးပုံ -->
+            <div id="office-part-1" class="bg-white rounded-2xl p-4 border border-amber-200/80 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">ဘာသာစကား (၁)</span>
+                    <button onclick="copyById('office-1-text')" class="text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-lg active:scale-95">📋 စာပိုဒ်ကူးရန်</button>
+                </div>
+                <h2 class="font-bold text-base text-slate-800">၁။ လုပ်ငန်းများတွင် မြန်မာစကားပြေ၏ အခန်းကဏ္ဍအရေးကြီးပုံ</h2>
+
+                <!-- Key Skeleton Box -->
+                <div class="bg-amber-50/80 border border-amber-200 rounded-xl p-3 text-xs space-y-1.5 key-highlight-box">
+                    <div class="font-bold text-amber-900">🔑 အဓိက မှတ်သားရမည့်အချက်များ -</div>
+                    <ul class="space-y-1 text-slate-800">
+                        <li>• <strong>အခိုင်မာဆုံး ဆက်သွယ်ရေး -</strong> စာ၊ လူ၊ တယ်လီဖုန်း၊ ကြေးနန်း၊ ဖက်စ်၊ အီးမေးလ်တို့အနက် <strong>"စာဖြင့် ဆက်သွယ်ခြင်း"</strong> သည် အခိုင်မာဆုံးဖြစ်သည်။</li>
+                        <li>• <strong>ပြည့်စုံရမည့် အင်္ဂါရပ် (၆) ချက် -</strong> ပြေပြစ်ခြင်း၊ ရှင်းလင်းခြင်း၊ စည်းလုံးခြင်း၊ မှန်ကန်ခြင်း၊ ညီညွတ်ခြင်း၊ ကျစ်လျစ်ခြင်း။</li>
+                        <li>• <strong>ရှောင်ကြဉ်ရမည့်အရာများ -</strong> အဓိပ္ပာယ်ငုပ်သည့်စကား၊ ဗန်းစကား၊ ဟောင်းနွမ်းလွန်းသည့်စကားလုံး၊ ရှေးဆန်သောအရေးအသား၊ အလင်္ကာ၊ ပုဒ်အထားအသိုမှားသည့် ဝါကျများ။</li>
+                    </ul>
+                </div>
+
+                <!-- Exact Text from Photo 1 -->
+                <div id="office-1-text" class="space-y-2.5 text-xs sm:text-sm text-slate-700 myanmar-text pt-1">
+                    <p class="full-detail indent-6">
+                        မြန်မာနိုင်ငံအတွင်းရှိ အစိုးရအဖွဲ့အစည်းများနှင့် အစိုးရအဖွဲ့အစည်းမဟုတ်သော အဖွဲ့အစည်းများ၏ လုပ်ငန်းဆိုင်ရာအတွက် အသုံးပြုရန် လုပ်ငန်းသုံးမြန်မာစာသည် လိုအပ်ပါသည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        စာ၊ လူ၊ တယ်လီဖုန်း၊ ကြေးနန်း၊ ဖက်စ်၊ အီးမေးလ်စသည့် ဆက်သွယ်ရေးနည်းလမ်းအမျိုးမျိုးရှိသည့်အနက် ရှေးယခင်မှ ယနေ့တိုင်အရေးပါဆဲ ဆက်သွယ်ရေးလမ်းကြောင်းမှာ <strong>“စာဖြင့်ဆက်သွယ်ခြင်း”</strong> ဖြစ်သည်။ “စာဖြင့်ဆက်သွယ်ခြင်းသည် အခိုင်မာဆုံးဖြစ်သည်။” လုပ်ငန်းများတွင် စာဖြင့်ရေးသားဆက်သွယ်ရာ၌ မြန်မာစာ၏ အခန်းကဏ္ဍသည် အရေးကြီးသည်။ အထူးသဖြင့် မြန်မာစကားပြေ ချောမွေ့မှန်ကန်စွာ ရေးသားတတ်ရန် လိုပါသည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        လုပ်ငန်းသုံးစာများကို သတ်မှတ်ထားသောပုံစံများနှင့်အညီ မြန်မာစကားပြေဖြင့် လိုက်နာရေးသားကြရာ စကားလုံးအသုံးအနှုန်း၊ ဝါကျတို့မှန်ကန်ရန် လိုအပ်သည်။ လုပ်ငန်းသုံး မြန်မာစာသည် တိုတိုရှင်းရှင်းနှင့် ထိထိရောက်ရောက်ဖြစ်သင့်သည်။ စကားပြေဆိုသည့်အတိုင်း <strong>ပြေပြစ်ခြင်း၊ ရှင်းလင်းခြင်း၊ စည်းလုံးခြင်း၊ မှန်ကန်ခြင်း၊ ညီညွတ်ခြင်း၊ ကျစ်လျစ်ခြင်း</strong>တို့ ပြည့်စုံရမည်။ အဓိပ္ပာယ်ငုပ်သည့် စကားအသုံးအနှုန်း၊ ဗန်းစကား၊ ဟောင်းနွမ်းလွန်းသည့် စကားလုံးများ၊ ရှေးဆန်သောအရေးအသား၊ အလင်္ကာ၊ ပုဒ်အထားအသိုမှားသည့် ဝါကျများကို ရှောင်ကြဉ်ရမည်။ ခေတ်သုံးစကားလုံးများ၊ ရှင်းလင်းတိကျသောဝါကျတို့ကို အသုံးပြုသင့်သည်။
+                    </p>
+                    <p class="full-detail indent-6">
+                        သို့မှသာ လုပ်ငန်းအသီးသီး၏ ဆက်သွယ်ရေးချောမောလွယ်ကူပြီး လုပ်ငန်းအောင်မြင်မှုကို အထောက်အကူပြုနိုင်ပေမည်။
+                    </p>
+                </div>
+            </div>
+
+            <!-- 2. နှိုးဆော်စာ (Photos 2 & 3) -->
+            <div id="office-part-2" class="bg-white rounded-2xl p-4 border border-emerald-200/80 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">ရုံးသုံးစာ (၂) - စာမျက်နှာ ၄၃/၄၄</span>
+                    <button onclick="copyById('office-2-text')" class="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg active:scale-95">📋 စာပိုဒ်ကူးရန်</button>
+                </div>
+                <h2 class="font-bold text-base text-slate-800">၂။ နှိုးဆော်စာ</h2>
+
+                <div id="office-2-text" class="space-y-3 text-xs sm:text-sm text-slate-800 myanmar-text">
+                    <!-- အဓိပ္ပာယ်နှင့် သဘောလက္ခဏာ -->
+                    <div class="bg-emerald-50/80 border border-emerald-200 rounded-xl p-3 space-y-1.5 key-highlight-box">
+                        <div><strong>• အဓိပ္ပာယ်ဖွင့်ဆိုချက် ။</strong> ကိစ္စတစ်ရပ်ဆောင်ရွက်ရန်အတွက် တိုက်တွန်းနှိုးဆော်သည့်စာ။</div>
+                        <div><strong>• သဘောလက္ခဏာ ။</strong> ကိစ္စတစ်ရပ်ရပ်ကို ဆောင်ရွက်ရန် အကြောင်းကြားပြီးနောက် အချိန်မီပြီးစီးအောင် ဆောင်ရွက်နိုင်ရန် ထပ်မံအကြောင်းကြားရာတွင် အသုံးများသည်။</div>
+                    </div>
+
+                    <!-- ပါဝင်သည့်အချက်များ (၈) ချက် -->
+                    <div class="space-y-2">
+                        <div class="font-bold text-emerald-900 text-sm">ပါဝင်သည့်အချက်များ (၈ ချက်) -</div>
+                        <ol class="space-y-2 text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                            <li><strong>(၁)</strong> နှိုးဆော်စာ ထုတ်ပြန်သည့် ဌာနလိပ်စာကို စာ၏ <strong class="text-emerald-800 underline">အလယ်တည့်တည့်တွင်</strong> ဖော်ပြရပါမည်။</li>
+                            <li><strong>(၂)</strong> အစိုးရလုပ်ငန်းသုံး နှိုးဆော်စာအမှတ်၏ အောက်တွင် <strong>နှိုးဆော်သော အကြိမ်</strong>ကို ထည့်သွင်းဖော်ပြရပါမည်။ (ဥပမာ - ပထမအကြိမ်၊ ဒုတိယအကြိမ်၊ တတိယအကြိမ်) ပုဂ္ဂလိက လုပ်ငန်းသုံး နှိုးဆော်စာတွင်လည်း ဤအတိုင်း ဖော်ပြနိုင်ပါသည်။</li>
+                            <li><strong>(၃)</strong> <strong>ရက်စွဲ</strong>ကို စာ၏ <strong>လက်ယာဘက်</strong>တွင် တပ်ရသည်။</li>
+                            <li><strong>(၄)</strong> နှိုးဆော်စာထုတ်ပြန်သည့် တာဝန်ရှိပုဂ္ဂိုလ်၏ အမည်၊ ရာထူး၊ လိပ်စာတို့ကို စာကိုယ်၏ <strong>အောက်ဘက် လက်ျာဘက်</strong>တွင် ဖော်ပြရပါမည်။ ကိုယ်စားထုတ်ပြန်ပါက ကိုယ်စားဟု ဝိုက်ကွင်းဖြင့် ဖော်ပြရသည်။</li>
+                            <li><strong>(၅)</strong> စာပိုဒ် နောက်တစ်ကြောင်း လက်ယာဘက်၌ <strong>“လေးစားမှုဖြင့် (သို့) လေးစားလျက်”</strong> ဟု ဖော်ပြပြီး နောက်တစ်ကြောင်း၌ ကိုယ်တိုင်လက်မှတ် ရေးထိုးရမည်။ (နောက်တစ်ကြောင်းစီ၌လည်း ကျောင်းသားဖြစ်လျှင် အမည်၊ ခုံအမှတ်၊ အတန်းနှင့် အတန်းခွဲတို့ကို ပြည့်ပြည့်စုံစုံ ထည့်သွင်းဖော်ပြရပြီး) ဝန်ထမ်းဖြစ်လျှင် အမည်၊ ရာထူး၊ ဌာနခွဲ၊ ဌာနစိတ်တို့ကို ပြည့်ပြည့်စုံစုံ ထည့်သွင်းဖော်ပြပေးရမည်။</li>
+                            <li><strong>(၆)</strong> နှိုးဆော်စာရေးသားရာတွင် နှိုးဆော်သည့်သဘောကို <strong>သိမ်မွေ့သောလေသံဖြင့်</strong> ဖော်ပြရသည်။</li>
+                            <li><strong>(၇)</strong> နှိုးဆော်စာရေးသားရာတွင် လိုအပ်ပါက စာပိုဒ်ခွဲ ရေးသားရန် ဖြစ်ပြီး <strong>သာမန်အားဖြင့် တစ်ပိုဒ်တည်း</strong> ရေးပါသည်။</li>
+                            <li><strong>(၈)</strong> အကြောင်းကြားပေးပို့ခဲ့သည့် စာကို <strong>ရည်ညွှန်းချက်အဖြစ် မပျက်မကွက်</strong> ဖော်ပြပေးရသည်။</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. ခွင့်စာ (Photos 3 & 4) -->
+            <div id="office-part-3" class="bg-white rounded-2xl p-4 border border-blue-200/80 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">ရုံးသုံးစာ (၃) - စာမျက်နှာ ၄၄/၄၅</span>
+                    <button onclick="copyById('office-3-text')" class="text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-lg active:scale-95">📋 စာပိုဒ်ကူးရန်</button>
+                </div>
+                <h2 class="font-bold text-base text-slate-800">၃။ ခွင့်စာ</h2>
+
+                <div id="office-3-text" class="space-y-3 text-xs sm:text-sm text-slate-800 myanmar-text">
+                    <!-- အဓိပ္ပာယ်နှင့် သဘောလက္ခဏာ -->
+                    <div class="bg-blue-50/80 border border-blue-200 rounded-xl p-3 space-y-1.5 key-highlight-box">
+                        <div><strong>• အဓိပ္ပာယ်ဖွင့်ဆိုချက် ။</strong> တစ်စုံတစ်ခု ဆောင်ရွက်ခွင့်ပြုရန် သက်ဆိုင်ရာပုဂ္ဂိုလ်ထံ ခွင့်တောင်းသည့်စာဖြစ်သည်။</div>
+                        <div><strong>• သဘောလက္ခဏာများ ။</strong> ခွင့်စာသည် ဆက်သွယ်စာအမျိုးအစား ဖြစ်သည်။ ခွင့်စာသည် ပုဂ္ဂလိကလုပ်ငန်း၌ ဖြစ်စေ၊ အစိုးရလုပ်ငန်းများ၌ ဖြစ်စေ၊ ကျောင်းသား၊ ကျောင်းသူများ၌ဖြစ်စေ သုံးလေ့ရှိသည်။ သက်ဆိုင်ရာပုဂ္ဂိုလ်ထံ မိမိထမ်းဆောင်ရမည့် လုပ်ငန်းတစ်စုံတစ်ရာမှ ပျက်ကွက်လိုကြောင်း စာဖြင့် အခွင့်တောင်းသည့် သဘော ဖြစ်သည်။</div>
+                    </div>
+
+                    <!-- ပါဝင်သည့်အချက်များ (၇) ချက် -->
+                    <div class="space-y-2">
+                        <div class="font-bold text-blue-900 text-sm">ပါဝင်သည့်အချက်များ (၇ ချက်) -</div>
+                        <ol class="space-y-2 text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                            <li><strong>(၁)</strong> စာရွက်၏ထိပ် <strong>လက်ဝဲဘက်၌</strong> သက်ဆိုင်ရာဌာန အကြီးအကဲ သို့မဟုတ် လုပ်ငန်းတာဝန်ခံ၏ လိပ်စာ ဖော်ပြရမည်။</li>
+                            <li><strong>(၂)</strong> ယင်း၏အောက်တစ်ကြောင်း <strong>လက်ယာဘက်၌ ရက်စွဲ</strong> ရေးရသည်။</li>
+                            <li><strong>(၃)</strong> ယင်း၏အောက်တစ်ကြောင်း <strong>လက်ဝဲဘက်၌ “အကြောင်းအရာ”</strong> ဟု ရေး၍ မည်သို့သော ခွင့်မျိုးအစားယူမည်ကို ရေးပေးရသည်။</li>
+                            <li>
+                                <strong>(၄)</strong> ယင်း၏ အောက်တွင် အကြောင်းအရာကို စာပိုဒ်ဖြင့် ဖော်ပြရသည်။ ထိုစာပိုဒ်ထဲတွင် -
+                                <ul class="pl-4 mt-1 space-y-1 text-slate-800 font-medium">
+                                    <li><strong>(က)</strong> မိမိနှင့် သက်ဆိုင်သောအကြောင်း (ဆောင်ရွက်နေသော လုပ်ငန်း၊ တက်ရောက်နေသော အတန်း .. စသည်)</li>
+                                    <li><strong>(ခ)</strong> ခွင့်တိုင်ရသည့် အကြောင်းရင်း၊</li>
+                                    <li><strong>(ဂ)</strong> ခွင့်ယူမည့်ရက်ပေါင်း၊</li>
+                                    <li><strong>(ဃ)</strong> ခွင့်တိုင်စာဖြစ်၍ <strong>“ပန်ကြားအပ်ပါသည်” ၊ “ခွင့်တောင်းခံအပ်ပါသည်”</strong> စသည်ဖြင့် ထည့်ပေးရမည်။</li>
+                                </ul>
+                            </li>
+                            <li><strong>(၅)</strong> စာပိုဒ်နောက်တစ်ကြောင်း လက်ယာဘက်၌ <strong>“လေးစားမှုဖြင့် (သို့) လေးစားလျက်”</strong> ဟု ဖော်ပြပြီး နောက်တစ်ကြောင်း၌ ကိုယ်တိုင်လက်မှတ် ရေးထိုးရမည်။ နောက်တစ်ကြောင်းစီ၌လည်း ကျောင်းသားဖြစ်လျှင် အမည်၊ ခုံအမှတ်၊ အတန်းနှင့်အတန်းခွဲတို့ကို ပြည့်ပြည့်စုံစုံ ထည့်သွင်းဖော်ပြပြီး ဝန်ထမ်းဖြစ်လျှင် အမည်၊ ရာထူး၊ ဌာနခွဲ၊ ဌာနစိတ်တို့ကို ပြည့်ပြည့်စုံစုံ ထည့်သွင်းဖော်ပြပေးရမည်။</li>
+                            <li><strong>(၆)</strong> <strong>ဆေးခွင့်ဖြစ်လျှင်</strong> ခွင့်စာထဲ၌ <em>“သက်ဆိုင်ရာ ဆရာဝန်၏ ဆေးလက်မှတ်မူရင်းကို တစ်ပါတည်း ပူးတွဲတင်ပြအပ်ပါသည်”</em> ဟုရေးသားပြီး ဆေးလက်မှတ်ကိုပါ တင်ပြရမည်။</li>
+                            <li><strong>(၇)</strong> <strong>လုပ်သက်ခွင့်၊ လစာမဲ့ခွင့်ဖြစ်လျှင်</strong> သက်ဆိုင်ရာ အကြီးအကဲ၏ ခွင့်ပြုချက် လက်မှတ်ကိုပါ ထည့်သွင်းတင်ပြရပါမည်။</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- =========================================================
+             TAB 6: စာစီစာကုံး (ESSAY SHORTCUT FORMULA)
+             ========================================================= -->
+        <div id="tab-essay" class="tab-content hidden space-y-4">
+            <div class="bg-white rounded-2xl p-4 border border-amber-200/80 shadow-sm space-y-3.5">
+                <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">စာစီစာကုံး အမှတ်ညှစ်ယူနည်း</span>
+                    <span class="text-xs text-slate-500">၃ ပိုဒ် ဖော်မြူလာ</span>
+                </div>
+                <h2 class="font-bold text-base text-slate-800">📝 အကုန်မရေးဘဲ အမှတ်သေချာပေါက်ယူနည်း</h2>
+
+                <!-- Checklist -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                    <div class="bg-amber-50/70 p-3 rounded-xl border border-amber-200">
+                        <strong class="text-amber-900 block mb-1">၁။ ပုံစံအမှတ် (Format Marks)</strong>
+                        • ခေါင်းစဉ်ကို အပေါ်အလယ်တည့်တည့်မှာ ရေးပြီး မျဉ်းသားပါ။<br>
+                        • <strong>ပုံကြမ်း (နိဒါန်း၊ စာကိုယ်၊ နိဂုံး)</strong> ၃-၄ ကြောင်း အရင်ချရေးပါ။<br>
+                        • အပိုဒ်သစ်စတိုင်း ရှေ့က လက်နှစ်လုံးစာ ချန်ရေးပါ။
+                    </div>
+                    <div class="bg-emerald-50/70 p-3 rounded-xl border border-emerald-200">
+                        <strong class="text-emerald-900 block mb-1">၂။ ၁ မျက်နှာခွဲ (၃ ပိုဒ်ခွဲနည်း)</strong>
+                        • <strong>နိဒါန်း -</strong> ၅ ကြောင်းခန့်<br>
+                        • <strong>စာကိုယ် -</strong> ၂ ပိုဒ် (၇ ကြောင်းစီခန့် - ကောင်းကျိုး/ဆိုးကျိုး)<br>
+                        • <strong>နိဂုံး -</strong> ၄ ကြောင်းခန့် (တိုက်တွန်းချက်/ဆုတောင်း)
+                    </div>
+                </div>
+
+                <!-- Ready-to-use Templates -->
+                <div class="space-y-2.5 pt-1">
+                    <h3 class="font-bold text-sm text-slate-800">⭐ ဘယ်ခေါင်းစဉ်လာလာ အသင့်သုံးနိုင်သော ဝါကျများ</h3>
+
+                    <!-- Intro 1 -->
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5 text-xs">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-amber-800">၁။ နိဒါန်းအဖွင့် (အထွေထွေ ခေါင်းစဉ်များအတွက်)</span>
+                            <button onclick="copyById('essay-intro-1')" class="text-amber-700 font-semibold hover:underline">Copy</button>
+                        </div>
+                        <p id="essay-intro-1" class="text-slate-700 myanmar-text">
+                            "လောကတွင် လူသားတိုင်း သိရှိနားလည်ထားသင့်သည့် အကြောင်းအရာများစွာ ရှိသည့်အနက် [ခေါင်းစဉ်အမည်] သည်လည်း အလွန်အရေးပါသော အခန်းကဏ္ဍတစ်ခုအဖြစ် ပါဝင်လျက်ရှိပါသည်။"
+                        </p>
+                    </div>
+
+                    <!-- Intro 2 -->
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5 text-xs">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-emerald-800">၂။ နိဒါန်းအဖွင့် (ပွဲတော် / ရာသီဥတု / ယဉ်ကျေးမှုအတွက်)</span>
+                            <button onclick="copyById('essay-intro-2')" class="text-emerald-700 font-semibold hover:underline">Copy</button>
+                        </div>
+                        <p id="essay-intro-2" class="text-slate-700 myanmar-text">
+                            "မြန်မာနိုင်ငံသည် သာယာလှပပြီး ရိုးရာယဉ်ကျေးမှု ထွန်းကားသော နိုင်ငံဖြစ်သည့်အားလျော်စွာ [ခေါင်းစဉ်အမည်] သည်လည်း မြန်မာတို့၏ ချစ်စရာကောင်းသော ဓလေ့တစ်ခုပင် ဖြစ်ပါသည်။"
+                        </p>
+                    </div>
+
+                    <!-- Conclusion -->
+                    <div class="bg-amber-50/90 p-3.5 rounded-xl border-2 border-amber-300 space-y-1.5 text-xs key-highlight-box">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-amber-900">၃။ နိဂုံးအပိတ် (ဒါကို အသေကျက်သွားပါ 💯)</span>
+                            <button onclick="copyById('essay-outro')" class="text-amber-800 font-bold hover:underline">Copy</button>
+                        </div>
+                        <p id="essay-outro" class="text-slate-800 font-medium myanmar-text">
+                            "ထို့ကြောင့် အချုပ်အားဖြင့် ဆိုရသော် ကျွန်ုပ်တို့အားလုံးသည် [ခေါင်းစဉ်အမည်] ၏ တန်ဖိုးနှင့် အနှစ်သာရကို ကောင်းစွာသိရှိနားလည်ပြီး၊ မိမိအကျိုး၊ ပတ်ဝန်းကျင်အကျိုးနှင့် နိုင်ငံ့အကျိုးကို ဆထက်ထမ်းပိုး သယ်ပိုးဆောင်ရွက်နိုင်ကြပါစေကြောင်း ဆန္ဒပြု ရေးသားအပ်ပါသည်။"
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+            });
+            // Show selected tab content
+            const target = document.getElementById(tabId);
+            if (target) target.classList.remove('hidden');
+
+            // Update tab button styles
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = 'tab-btn py-1.5 px-0.5 rounded-lg text-[11px] sm:text-xs font-medium text-slate-600 hover:text-slate-900 transition-all';
+            });
+            const activeBtn = document.getElementById('btn-' + tabId);
+            if (activeBtn) {
+                activeBtn.className = 'tab-btn py-1.5 px-0.5 rounded-lg text-[11px] sm:text-xs font-bold transition-all bg-white text-amber-800 shadow-sm';
+            }
+
+            // Scroll smoothly to top of main content
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Key Points Only Mode Toggle
+        let isKeyMode = false;
+        function toggleKeyMode() {
+            isKeyMode = !isKeyMode;
+            const body = document.body;
+            const dot = document.getElementById('keyModeDot');
+            const btn = document.getElementById('keyModeBtn');
+            const banner = document.getElementById('keyModeBanner');
+
+            if (isKeyMode) {
+                body.classList.add('key-only-mode');
+                dot.className = 'w-2 h-2 rounded-full bg-amber-500 animate-ping';
+                btn.className = 'shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border-2 border-amber-500 bg-amber-100 text-amber-950 active:scale-95 transition-all shadow-sm';
+                banner.classList.remove('hidden');
+                showToast('⚡ အဓိကအချက် သီးသန့်မုဒ် ဖွင့်လိုက်ပါပြီ');
+            } else {
+                body.classList.remove('key-only-mode');
+                dot.className = 'w-2 h-2 rounded-full bg-slate-400 transition-colors';
+                btn.className = 'shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100 active:scale-95 transition-all shadow-sm';
+                banner.classList.add('hidden');
+                showToast('📖 စာအပြည့်အစုံမုဒ် ပြန်ဖွင့်လိုက်ပါပြီ');
+            }
+        }
+
+        // Interactive Sorting Examples
+        const sortExamples = {
+            flowers: {
+                note: 'ပင်မဗျည်းမတူသဖြင့် က မှ အ အစဉ်အတိုင်း တန်းစီရုံသာ -',
+                list: ['၁။ ကံ့ကော် (က)', '၂။ ခရေ (ခ)', '၃။ ဂေါ်သဇင် (ဂ)', '၄။ ငုဝါ (င)', '၅။ စွယ်တော် (စ)', '၆။ ဆတ်သွား (ဆ)', '၇။ ဇွန်ပွင့် (ဇ)', '၈။ ညမွှေးပန်း (ည)', '၉။ တမာ (တ)', '၁၀။ ထန်း (ထ)', '၁၁။ ဒေါန (ဒ)', '၁၂။ နှင်းဆီ (န)', '၁၃။ ပိတောက် (ပ)', '၁၄။ မေမြို့ (မ)', '၁၅။ အုန်း (အ)']
+            },
+            fruits: {
+                note: 'ဗျည်းအစဉ်အတိုင်းစီပြီး မ နှစ်လုံး၊ သ နှစ်လုံးကို သရ ➔ အသတ် ဖြင့် ယှဉ်ပါ -',
+                list: ['၁။ ခရမ်းချဉ် (ခ)', '၂။ ငှက်ပျော (င)', '၃။ စပျစ် (စ)', '၄။ ဇီးသီး (ဇ)', '၅။ ထောပတ် (ထ)', '၆။ ဒူးရင်း (ဒ)', '၇။ ပန်းသီး (ပ)', '၈။ မာလကာ (မ-သရ)', '၉။ မင်းကွတ် (မ-အသတ်)', '၁၀။ သရက် (သ-သရ)', '၁၁။ သင်္ဘော (သ-အသတ်)', '၁၂။ ဩဇာ (အ အုပ်စု)']
+            },
+            pa5: {
+                note: 'ပု ၊ ပိုက် ၊ ပန်း ၊ ပျား ၊ ပြ (သရ ➔ အသတ် ➔ ဗျည်းတွဲ အစဉ်) -',
+                list: ['၁။ ပုလဲ (သရသက်သက်)', '၂။ ပိုက်ဆံ (က် အသတ်)', '၃။ ပန်းပွင့် (န် အသတ်)', '၄။ ပျားရည် (-ျ ယပင့်)', '၅။ ပြတင်းပေါက် (ြ- ရရစ်)']
+            }
+        };
+
+        function renderSortExample(key) {
+            const data = sortExamples[key];
+            const out = document.getElementById('sort-example-output');
+            if (!data || !out) return;
+            out.innerHTML = `
+                <div class="font-semibold text-amber-900 mb-1.5">${data.note}</div>
+                <div class="flex flex-wrap gap-1.5">
+                    ${data.list.map(item => `<span class="px-2 py-0.5 bg-white rounded-md border border-slate-200 font-medium text-slate-800">${item}</span>`).join('')}
+                </div>
+            `;
+        }
+
+        // Clipboard Copy Helper
+        function copyById(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const textarea = document.createElement('textarea');
+            textarea.value = el.innerText.trim();
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast('📋 စာသားကို ကူးယူပြီးပါပြီ!');
+            } catch (err) {
+                showToast('ကူးယူ၍ မရပါ');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2200);
+        }
+
+        window.onload = function() {
+            renderSortExample('flowers');
+        };
+    </script>
+</body>
+</html>
