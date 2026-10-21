@@ -1,0 +1,313 @@
+```html
+<!DOCTYPE html>
+<html lang="my" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>မြန်မာစာ အမှတ်ပြည့် လမ်းညွှန် | Exam Cheat Sheet</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Padauk & Noto Sans Myanmar & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Sans+Myanmar:wght@400;500;600;700&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        burmese: ['"Noto Sans Myanmar"', '"Padauk"', '"Pyidaungsu"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Noto Sans Myanmar', 'Padauk', 'Pyidaungsu', sans-serif;
+            line-height: 1.85;
+            background-color: #09090b;
+            color: #f4f4f5;
+            -webkit-font-smoothing: antialiased;
+        }
+        .myanmar-text {
+            line-height: 1.95;
+            letter-spacing: 0.01em;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #09090b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3f3f46;
+        }
+        /* Hide scrollbar for nav tabs on mobile */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-zinc-950 text-zinc-100 selection:bg-emerald-500/30 selection:text-emerald-200 pb-20">
+
+    <!-- Toast Notification for Copy -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-emerald-950/90 border border-emerald-500/40 text-emerald-200 px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2.5 text-sm">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span id="toast-msg">ကူးယူပြီးပါပြီ!</span>
+    </div>
+
+    <!-- Top Sticky Header & Navigation -->
+    <header class="sticky top-0 z-40 bg-zinc-950/85 backdrop-blur-md border-b border-zinc-800/80">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6">
+            <!-- Top Row: Title + View Mode Toggle -->
+            <div class="flex flex-wrap items-center justify-between py-3.5 gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-lg shadow-inner">
+                        က
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="font-bold text-base sm:text-lg tracking-tight text-zinc-100">မြန်မာစာ အမှတ်ပြည့် Cheat Sheet</h1>
+                            <span class="hidden sm:inline-block text-[11px] font-mono uppercase px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">Exam Ready</span>
+                        </div>
+                        <p class="text-xs text-zinc-400">အက္ခရာစဉ် • သဒ္ဒါ • စကားပြေ • ကဗျာ • စာစီစာကုံး ဖော်မြူလာ</p>
+                    </div>
+                </div>
+
+                <!-- Global View Mode Switcher -->
+                <div class="flex items-center bg-zinc-900 p-1 rounded-xl border border-zinc-800">
+                    <button id="btn-mode-full" onclick="setViewMode('full')" class="px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-zinc-800 text-emerald-400 shadow-sm border border-zinc-700/60">
+                        အပြည့်အစုံ + ၆ မှတ်တန် စာပိုဒ်
+                    </button>
+                    <button id="btn-mode-key" onclick="setViewMode('key')" class="px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-zinc-400 hover:text-zinc-200">
+                        အဓိကအချက် သီးသန့်
+                    </button>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <nav class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-2 border-t border-zinc-900">
+                <button onclick="switchTab('tab-sorting')" id="nav-tab-sorting" class="tab-btn active-tab shrink-0 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-2 bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                    <span class="font-mono text-xs opacity-75">01.</span> အက္ခရာစဉ် (၆ မှတ်)
+                </button>
+                <button onclick="switchTab('tab-grammar')" id="nav-tab-grammar" class="tab-btn shrink-0 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-2 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 border border-transparent">
+                    <span class="font-mono text-xs opacity-75">02.</span> သဒ္ဒါ မေးခွန်းတို
+                </button>
+                <button onclick="switchTab('tab-prose')" id="nav-tab-prose" class="tab-btn shrink-0 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-2 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 border border-transparent">
+                    <span class="font-mono text-xs opacity-75">03.</span> စကားပြေ (၂ ပုဒ်)
+                </button>
+                <button onclick="switchTab('tab-poetry')" id="nav-tab-poetry" class="tab-btn shrink-0 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-2 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 border border-transparent">
+                    <span class="font-mono text-xs opacity-75">04.</span> ကဗျာ (၂ ပုဒ်)
+                </button>
+                <button onclick="switchTab('tab-essay')" id="nav-tab-essay" class="tab-btn shrink-0 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-2 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 border border-transparent">
+                    <span class="font-mono text-xs opacity-75">05.</span> စာစီစာကုံး Trick
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 pt-6 space-y-8">
+
+        <!-- ==========================================
+             SECTION 1: အက္ခရာစဉ်နည်း (ALPHABETICAL ORDER)
+             ========================================== -->
+        <section id="tab-sorting" class="tab-section space-y-6">
+            <!-- Golden Rule Banner -->
+            <div class="bg-gradient-to-br from-zinc-900 via-zinc-900 to-emerald-950/30 border border-zinc-800 rounded-2xl p-5 sm:p-6 shadow-lg">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-2.5 py-1 rounded-md text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                        GOLDEN RULE • အမှတ်ပြည့်ယူနည်း
+                    </span>
+                    <span class="text-xs text-zinc-400">၁၂ လုံးစီ = ၆ မှတ်</span>
+                </div>
+                <h2 class="text-lg sm:text-xl font-bold text-zinc-100 mb-3">
+                    စာမေးပွဲမှာ အက္ခရာစဉ် မေးခွန်းမြင်တာနဲ့ ဒီ (၂) ဆင့်အတိုင်းပဲ စစ်ပါ
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <!-- Step 1 -->
+                    <div class="bg-zinc-950/70 border border-emerald-500/30 rounded-xl p-4 relative overflow-hidden">
+                        <div class="text-xs font-mono text-emerald-400 mb-1">STEP 01 (အရင်ဆုံးကြည့်ရန်)</div>
+                        <h3 class="font-bold text-base text-zinc-100 mb-2">၁။ ရှေ့ဆုံး ပင်မဗျည်း (က - အ) တူလား၊ မတူဘူးလား?</h3>
+                        <p class="text-sm text-zinc-300 myanmar-text">
+                            ပေးထားတဲ့ စကားလုံးတွေရဲ့ ရှေ့ဆုံးဗျည်းတွေက တစ်လုံးနဲ့တစ်လုံး <strong>မတူရင်</strong> (ဥပမာ - ပန်းနာမည်တွေလို က၊ ခ၊ ဂ၊ င၊ စ၊ ဆ ကွဲနေရင်) ဇယားဆွဲစရာ လုံးဝမလိုဘူး! <strong>က ကနေ အ (၃၃) လုံး အစဉ်အတိုင်း တန်းစီချလိုက်ရုံပဲ။</strong>
+                        </p>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="bg-zinc-950/70 border border-cyan-500/30 rounded-xl p-4 relative overflow-hidden">
+                        <div class="text-xs font-mono text-cyan-400 mb-1">STEP 02 (ဗျည်းတူနေမှ သုံးရန်)</div>
+                        <h3 class="font-bold text-base text-zinc-100 mb-2">၂။ ပင်မဗျည်းချင်း တူနေရင် ကော်လံ (၃) ခု ခွဲချပါ!</h3>
+                        <p class="text-sm text-zinc-300 myanmar-text">
+                            ဗျည်းတူနေတဲ့ စာလုံးတွေကို <strong>(၁) သရသက်သက် ➔ (၂) အသတ် ➔ (၃) ဗျည်းတွဲ</strong> ဆိုပြီး အုပ်စု ၃ စု ခွဲလိုက်ရင် လုံးဝ မမှားတော့ဘူး။ ပင့်/ရစ်/ဆွဲ/ထိုး ပါသမျှ အနောက်ဆုံးအုပ်စုကို တန်းပို့ပါ။
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- The 3-Column Method Breakdown -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Col 1: Vowels -->
+                <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">ကော်လံ (၁) • အရှေ့ဆုံး</span>
+                            <span class="text-xs text-zinc-500">သရသက်သက်</span>
+                        </div>
+                        <h4 class="font-bold text-zinc-100 mb-2">ရိုးရိုးဗျည်း + သရသက်သက်</h4>
+                        <p class="text-xs text-zinc-400 mb-3 myanmar-text">
+                            ဗျည်းတွဲလည်းမပါ၊ အသတ်လည်းမပါတဲ့ သရသက်သက် စာလုံးတွေက အမြဲတမ်း အရှေ့ဆုံးမှာ လာပါတယ်။
+                        </p>
+                        <div class="bg-zinc-950 border border-zinc-800/80 rounded-lg p-3 text-sm text-emerald-300 font-medium text-center tracking-wide">
+                            အ ➔ အာ ➔ အိ ➔ အီ ➔ အု ➔ အူ ➔ အေ ➔ အဲ ➔ အော ➔ အို
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-zinc-800/80 text-xs text-zinc-400 space-y-1">
+                        <div><strong class="text-zinc-200">ဥပမာ -</strong> ကာ ➔ ကိ ➔ ကု ➔ ကူ ➔ ကေ ➔ ကဲ ➔ ကော ➔ ကို</div>
+                        <div class="text-amber-400/90">⚠️ သတိပြုရန်: "ကော် (ေ-ာ်)" သည် အသတ်မဟုတ်ပါ၊ "အော" သရသာ ဖြစ်သည်။</div>
+                    </div>
+                </div>
+
+                <!-- Col 2: Finals -->
+                <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">ကော်လံ (၂) • အလယ်</span>
+                            <span class="text-xs text-zinc-500">အသတ်စဉ်</span>
+                        </div>
+                        <h4 class="font-bold text-zinc-100 mb-2">ရိုးရိုးဗျည်း + အသတ် (-် / -ံ)</h4>
+                        <p class="text-xs text-zinc-400 mb-3 myanmar-text">
+                            သရသက်သက်တွေ အကုန်ပြီးမှ အသတ်ပါတဲ့ စာလုံးတွေကို ဗျည်းအစဉ် (က မှ မ + သေးသေးတင်) အတိုင်း စီပါ။
+                        </p>
+                        <div class="bg-zinc-950 border border-zinc-800/80 rounded-lg p-3 text-sm text-cyan-300 font-medium text-center">
+                            က် ➔ င် ➔ စ် ➔ ဉ်/ည် ➔ တ် ➔ န် ➔ ပ် ➔ မ် ➔ ယ် ➔ ံ
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-zinc-800/80 text-xs text-zinc-400 space-y-1">
+                        <div><strong class="text-zinc-200">ဥပမာ -</strong> ကောက်(က်) ➔ ကောင်း(င်) ➔ ကိစ္စ(စ်) ➔ ကန်(န်) ➔ ကံ့(ံ)</div>
+                        <div>အသံတူရင်: အောက်မြစ် (-့) ➔ ရိုးရိုး ➔ ဝစ္စပေါက် (-း)</div>
+                    </div>
+                </div>
+
+                <!-- Col 3: Medials -->
+                <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">ကော်လံ (၃) • အနောက်ဆုံး</span>
+                            <span class="text-xs text-zinc-500">ဗျည်းတွဲစဉ်</span>
+                        </div>
+                        <h4 class="font-bold text-zinc-100 mb-2">ဗျည်းတွဲ (ပင့် • ရစ် • ဆွဲ • ထိုး)</h4>
+                        <p class="text-xs text-zinc-400 mb-3 myanmar-text">
+                            သရနဲ့ အသတ် ဘာပဲပါနေပါစေ ပင့်၊ ရစ်၊ ဆွဲ၊ ထိုး တစ်ခုခု ပါတာနဲ့ ရိုးရိုးဗျည်းအားလုံးရဲ့ အနောက်ကို တန်းပို့ပါ။
+                        </p>
+                        <div class="bg-zinc-950 border border-zinc-800/80 rounded-lg p-3 text-sm text-amber-300 font-medium text-center">
+                            ပင့် (-ျ) ➔ ရစ် (ြ-) ➔ ဆွဲ (-ွ) ➔ ထိုး (-ှ) ➔ နှစ်ခုတွဲ (ြ-ွ)
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-zinc-800/80 text-xs text-zinc-400 space-y-1">
+                        <div><strong class="text-zinc-200">ဥပမာ -</strong> ကျောင်း(-ျ) ➔ ကြက်(ြ-) ➔ ကွမ်း(-ွ) ➔ ကြွက်(ြ-ွ)</div>
+                        <div class="text-emerald-400/90">💡 နှစ်ခုတွဲ (ဥပမာ ကြွက်) သည် တစ်ခုတွဲအားလုံး၏ အနောက်ဆုံး၌ လာသည်။</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 33 Consonants Quick Reference Grid -->
+            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 sm:p-6">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                    <div>
+                        <h3 class="font-bold text-base text-zinc-100">ဗျည်း (၃၃) လုံး အစဉ် ဇယား (မေ့သွားရင် ကြည့်ရန်)</h3>
+                        <p class="text-xs text-zinc-400">၅ လုံး တစ်တွဲ (ဝဂ်အလိုက်) မှတ်ထားရင် စာမေးပွဲမှာ အရမ်းမြန်ပါတယ်</p>
+                    </div>
+                    <span class="text-xs px-2.5 py-1 rounded bg-zinc-800 text-zinc-300">ဩ / ဪ = 'အ' နေရာ (အနောက်ဆုံး)</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div class="bg-zinc-950 border border-zinc-800/80 rounded-xl p-3 flex items-center justify-between">
+                        <span class="text-xs font-mono text-zinc-500">က-ဝဂ်</span>
+                        <div class="flex gap-2.5 font-bold text-base text-emerald-300">
+                            <span>က</span><span>ခ</span><span>ဂ</span><span>ဃ</span><span>င</span>
+                        </div>
+                    </div>
+                    <div class="bg-zinc-950 border border-zinc-800/80 rounded-xl p-3 flex items-center justify-between">
+                        <span class="text-xs font-mono text-zinc-500">စ-ဝဂ်</span>
+                        <div class="flex gap-2.5 font-bold text-base text-cyan-300">
+                            <span>စ</span><span>ဆ</span><span>ဇ</span><span>ဈ</span><span>ဉ/ည</span>
+                        </div>
+                    </div>
+                    <div class="bg-zinc-950 border border-zinc-800/80 rounded-xl p-3 flex items-center justify-between">
+                        <span class="text-xs font-mono text-zinc-500">ဋ-ဝဂ်</span>
+                        <div class="flex gap-2.5 font-bold text-base text-zinc-300">
+                            <span>ဋ</span><span>ဌ</span><span>ဍ</span><span>ဎ</span><span>ဏ</span>
+                        </div>
+                    </div>
+                    <div class="bg-zinc-950 border border-zinc-800/80 rounded-xl p-3 flex items-center justify-between">
+                        <span class="text-xs font-mono text-zinc-500">တ-ဝဂ်</span>
+                        <div class="flex gap-2.5 font-bold text-base text-amber-300">
+                            <span>တ</span><span>ထ</span><span>ဒ</span><span>ဓ</span><span>န</span>
+                        </div>
+                    </div>
+                    <div class="bg-zinc-950 border border-zinc-800/80 rounded-xl p-3 flex items-center justify-between">
+                        <span class="text-xs font-mono text-zinc-500">ပ-ဝဂ်</span>
+                        <div class="flex gap-2.5 font-bold text-base text-purple-300">
+                            <span>ပ</span><span>ဖ</span><span>ဗ</span><span>ဘ</span><span>မ</span>
+                        </div>
+                    </div>
+                    <div class="bg-zinc-950 border border-zinc-800/80 rounded-xl p-3 flex items-center justify-between">
+                        <span class="text-xs font-mono text-zinc-500">အ-ဝဂ်</span>
+                        <div class="flex gap-2 font-bold text-sm sm:text-base text-rose-300">
+                            <span>ယ</span><span>ရ</span><span>လ</span><span>ဝ</span><span>သ</span><span>ဟ</span><span>ဠ</span><span>အ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Practice Sets (From our Session) -->
+            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 sm:p-6">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                    <div>
+                        <span class="text-xs font-mono text-emerald-400 uppercase">Interactive Practice</span>
+                        <h3 class="font-bold text-base text-zinc-100">ငါတို့ လေ့ကျင့်ခဲ့တဲ့ ပုဒ်စာများ (အဖြေတိုက်ရန်)</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="loadQuizSet('flowers')" id="quiz-btn-flowers" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                            ၁။ ပန်း (၁၅) မျိုး (ဗျည်းမတူ)
+                        </button>
+                        <button onclick="loadQuizSet('ka12')" id="quiz-btn-ka12" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-800 text-zinc-400 hover:text-zinc-200">
+                            ၂။ 'က' စာလုံး (၁၂) လုံး (ဗျည်းတူ)
+                        </button>
+                        <button onclick="loadQuizSet('fruits')" id="quiz-btn-fruits" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-800 text-zinc-400 hover:text-zinc-200">
+                            ၃။ အသီး (၁၂) မျိုး (ရောနှော)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quiz Display Box -->
+                <div id="quiz-container" class="bg-zinc-950 border border-zinc-800 rounded-xl p-4 sm:p-5 space-y-4">
+                    <!-- Dynamic content injected by JS -->
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================
+             SECTION 2: သဒ္ဒါ (GRAMMAR SHORT QUESTIONS)
+             ========================================== -->
+        <section id="tab-grammar" class="tab-section hidden space-y-6">
+            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 sm:p-6">
+                <div class="flex items-center ju
